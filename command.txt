@@ -1,0 +1,4 @@
+
+Desative o Git Credential Manager (para parar os popups)
+# Ou, se quiser só nesse repo específico
+git config --local --unset credential.helper
