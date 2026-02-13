@@ -13,12 +13,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   routeRules: {
-    '/api/**': {
-      cors: true
-    },
-    '/dashboard/**': {
-      appLayout: 'dashboard'
-    }
+    '/api/**': { cors: true },
+    '/dashboard/**': { appLayout: 'dashboard' }
   },
 
   compatibilityDate: '2024-07-11',
