@@ -31,7 +31,7 @@ const services = [
         <header
             class="absolute top-0 left-0 right-0 bg-hero text-hero-foreground sticky top-0 z-50 border-b border-hero-foreground/10 backdrop-blur-sm bg-hero/95">
             <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-                <div class="font-display font-bold text-xl">NegoQA</div>
+                <div class="font-display font-bold text-xl">NegoTester</div>
                 <a href="#contacto"
                     class="border border-primary rounded-full text-primary-foreground px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity">
                     Entra
@@ -45,11 +45,6 @@ const services = [
                 backgroundImage: 'linear-gradient(hsl(220 80% 50%) 1px, transparent 2px), linear-gradient(90deg, hsl(220 80% 50%) 2px, transparent 2px)',
                 backgroundSize: '60px 60px'
             }" />
-            <div
-                class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 text-sm text-primary">
-                <span class="h-2 w-2 rounded-full bg-accent animate-pulse" />
-                Qualidade &middot; Consultoria &middot; Equipas &middot; Documentação
-            </div>
             <div class="flex flex-col lg:flex-row-reverse items-center justify-between max-w-6xl mx-auto lg:gap-10">
                 <div class="self-start m-auto">
                     <DotLottieVue style="height: 450px; width: 450px" autoplay loop
@@ -61,10 +56,15 @@ const services = [
                         <span class="text-primary">qualidade <br /> </span>
                         <span>garantida.</span>
                     </div>
-                    <p class="text-hero-muted text-md md:text-lg max-w-xl mb-10 leading-relaxed">
+                    <p class="text-hero-muted text-md md:text-lg max-w-xl mb-6 leading-relaxed">
                         Serviços especializados em QA, consultoria, documentação técnica e contratação de equipas de
                         desenvolvimento à medida do seu projeto.
                     </p>
+                    <div class="flex flex-col md:flex-row gap-2 md:gap-4">
+                        <UButton color="primary" variant="outline">Login</UButton>
+                        <UButton color="primary" variant="soft">Registar</UButton>
+                        <UButton color="primary" variant="solid">Contacte-nos</UButton>
+                    </div>
                 </div>
             </div>
         </section>
@@ -72,6 +72,17 @@ const services = [
         <!-- Services Section -->
         <section class="bg-hero-foreground text-hero-foreground mx-auto">
             <div class="max-w-6xl mx-auto">
+                <div class="mb-10 ">
+                    <h2 class="font-display text-xl font-bold leading-tight tracking-tight mb-6">
+                        <span>Os nossos </span>
+                        <span class="text-primary">serviços </span>
+                        <span>para o seu negócio.</span>
+                    </h2>
+                    <p class="text-hero-muted text-md  max-w-xl mb-10 leading-relaxed">
+                        Serviços especializados em QA, consultoria, documentação técnica e contratação de equipas de
+                        desenvolvimento à medida do seu projeto.
+                    </p>
+                </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
                     <UCard v-for="service in services" :key="service.title" variant="soft">
                         <template #header>
