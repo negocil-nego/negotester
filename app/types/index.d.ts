@@ -52,6 +52,22 @@ export interface Notification {
   date: string
 }
 
+export interface Category {
+  id: number
+  title: string
+  description?: string
+  icon?: string
+}
+
+export interface Service {
+  id: number
+  title: string
+  description?: string
+  icon?: string
+  price: number
+  category: Category
+}
+
 export type Period = 'daily' | 'weekly' | 'monthly'
 
 export interface Range {
