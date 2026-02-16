@@ -7,14 +7,14 @@ const toast = useToast()
 const open = ref(false)
 
 const links = [[{
-  label: 'Home',
+  label: 'Estatísticas',
   icon: 'i-lucide-house',
   to: '/dashboard',
   onSelect: () => {
     open.value = false
   }
 }, {
-  label: 'Inbox',
+  label: 'Chat',
   icon: 'i-lucide-inbox',
   to: '/dashboard/inbox',
   badge: '4',
@@ -22,39 +22,53 @@ const links = [[{
     open.value = false
   }
 }, {
-  label: 'Customers',
+  label: 'Usuários',
   icon: 'i-lucide-users',
   to: '/dashboard/customers',
   onSelect: () => {
     open.value = false
   }
 }, {
-  label: 'Settings',
+  label: 'Categorias',
+  icon: 'i-lucide-chart-scatter',
+  to: '/dashboard/categories',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
+  label: 'Serviços',
+  icon: 'i-lucide-layers',
+  to: '/dashboard/services',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
+  label: 'Configurações',
   to: '/dashboard/settings',
   icon: 'i-lucide-settings',
   defaultOpen: true,
   type: 'trigger',
   children: [{
-    label: 'General',
+    label: 'Perfil',
     to: '/dashboard/settings',
     exact: true,
     onSelect: () => {
       open.value = false
     }
   }, {
-    label: 'Members',
+    label: 'Preferências',
     to: '/dashboard/settings/members',
     onSelect: () => {
       open.value = false
     }
   }, {
-    label: 'Notifications',
+    label: 'Notificações',
     to: '/dashboard/settings/notifications',
     onSelect: () => {
       open.value = false
     }
   }, {
-    label: 'Security',
+    label: 'Securança',
     to: '/dashboard/settings/security',
     onSelect: () => {
       open.value = false
@@ -119,7 +133,7 @@ onMounted(async () => {
     <UDashboardSidebar id="default" v-model:open="open" collapsible resizable class="bg-elevated/25"
       :ui="{ footer: 'lg:border-t lg:border-default' }">
       <template #header="{ collapsed }">
-        <TeamsMenu :collapsed="collapsed" />
+        <UserMenu :collapsed="collapsed" />
       </template>
 
       <template #default="{ collapsed }">
@@ -131,7 +145,7 @@ onMounted(async () => {
       </template>
 
       <template #footer="{ collapsed }">
-        <UserMenu :collapsed="collapsed" />
+        <p>@ Copyright {{ new Date().getFullYear() }}</p>
       </template>
     </UDashboardSidebar>
 

@@ -1,7 +1,7 @@
 <template>
-    <div class="flex flex-col lg:flex-row-reverse items-center justify-between max-w-6xl mx-auto lg:gap-10">
+    <div class="flex flex-col lg:flex-row-reverse items-center justify-between max-w-6xl mx-auto lg:gap-10 md:mt-5">
         <div class="self-start m-auto">
-            <DotLottieVue autoplay loop src="/development-on-desktop.lottie" />
+            <DotLottieVue class="md:w-[500px] md:h-[300px]" autoplay loop src="/development-on-desktop.lottie" />
         </div>
         <div>
             <div

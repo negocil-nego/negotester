@@ -50,21 +50,35 @@
 </template>
 
 <script setup lang="ts">
-// State
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+
 const form = reactive({
     phone: '',
     email: '',
     password: ''
 })
 
-// Methods
-const handleSubmit = () => {
-    console.log('Form submitted:', form)
-    // Adicione sua lógica de registro aqui
+const handleSubmit = async () => {
+    const { data, error } = await supabase.auth.signUp({
+        email: form.email,
+        phone: form.phone,
+        password: form.password
+    })
+    if (error) {
+        console.error('Error signing up:', error)
+    } else {
+        console.log('User signed up successfully:', data)
+    }
 }
 
 const handleSocialLogin = (provider: string) => {
     console.log(`Login with ${provider}`)
-    // Adicione sua lógica de login social aqui
 }
+
+watch(user, () => {
+    if (user.value) {
+        navigateTo('/dashboard')
+    }
+}, { immediate: true })
 </script>

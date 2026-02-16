@@ -11,7 +11,7 @@
                     <ul class="gap-2 md:gap-5 hidden md:flex">
                         <li>
                             <ULink to="#" class="rounded-full">
-                                Home
+                                Início
                             </ULink>
                         </li>
                         <li>
