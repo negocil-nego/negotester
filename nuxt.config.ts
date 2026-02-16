@@ -4,7 +4,8 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/ui',
     '@vueuse/nuxt',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@nuxtjs/supabase'
   ],
 
   devtools: {
@@ -26,6 +27,16 @@ export default defineNuxtConfig({
         commaDangle: 'never',
         braceStyle: '1tbs'
       }
+    }
+  },
+
+  supabase: {
+    redirectOptions: {
+      exclude: [
+        '/', '/login', '/about', '/register', '/forget-password'
+      ],
+      login: "/login",
+      callback: "/confirm"
     }
   }
 })
