@@ -11,10 +11,7 @@ const table = useTemplateRef('table')
 const {
   getHeaderSelect,
   getCellSelect,
-  getHeaderName,
   getIconAction,
-  iconButton,
-  iconStyle,
   columnVisibility,
   columnFilters,
   rowSelection,
@@ -34,11 +31,11 @@ const columns: TableColumn<Category>[] = [
   },
   {
     accessorKey: 'id',
-    header: 'ID'
+    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'id'))
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => h(UButton, getHeaderName(column, column.getIsSorted()))
+    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Nome'))
   },
   {
     accessorKey: 'description',

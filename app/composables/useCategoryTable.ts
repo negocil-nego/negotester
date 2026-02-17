@@ -1,4 +1,4 @@
-import type { Column, Row, SortDirection, Table } from "@tanstack/table-core"
+import type { Row, Table } from "@tanstack/table-core"
 import type { Category } from "~/types"
 
 export function useCategoryTable(table: any) {
@@ -79,21 +79,6 @@ export function useCategoryTable(table: any) {
         }
     }
 
-    function getHeaderName(column: Column<Category>, isSorted: false | SortDirection) {
-        return {
-            color: 'neutral',
-            variant: 'ghost',
-            label: 'Nome',
-            icon: isSorted
-                ? isSorted === 'asc'
-                    ? 'i-lucide-arrow-up-narrow-wide'
-                    : 'i-lucide-arrow-down-wide-narrow'
-                : 'i-lucide-arrow-up-down',
-            class: '-mx-2.5',
-            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
-        }
-    }
-
     function getIconAction(row: Row<Category>) {
         return {
             content: { align: 'end' },
@@ -101,25 +86,12 @@ export function useCategoryTable(table: any) {
         }
     }
 
-    const iconButton = {
-        icon: 'i-lucide-ellipsis-vertical',
-        color: 'neutral',
-        variant: 'ghost',
-        class: 'ml-auto'
-    }
-
-    const iconStyle = { class: 'text-right' }
-
     return {
         search,
         getRowItems,
         getHeaderSelect,
         getCellSelect,
-        getHeaderName,
         getIconAction,
-
-        iconButton,
-        iconStyle,
 
         columnFilters,
         rowSelection,
