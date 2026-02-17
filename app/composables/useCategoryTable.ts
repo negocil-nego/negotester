@@ -3,8 +3,8 @@ import type { Category } from "~/types"
 
 export function useCategoryTable(table: any) {
     const toast = useToast()
-    const columnVisibility = ref()
-    const rowSelection = ref({ 1: true })
+    const columnVisibility = ref({ id: false })
+    const rowSelection = ref({})
     const pagination = ref({
         pageIndex: 0,
         pageSize: 10
@@ -64,12 +64,10 @@ export function useCategoryTable(table: any) {
 
     function getHeaderSelect(table: Table<Category>) {
         return {
-            'modelValue': table.getIsSomePageRowsSelected()
-                ? 'indeterminate'
-                : table.getIsAllPageRowsSelected(),
+            'modelValue': table.getIsSomePageRowsSelected() ? 'indeterminate' : table.getIsAllPageRowsSelected(),
             'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
                 table.toggleAllPageRowsSelected(!!value),
-            'ariaLabel': 'Select all'
+            'ariaLabel': 'Select all',
         }
     }
 
@@ -96,14 +94,32 @@ export function useCategoryTable(table: any) {
         }
     }
 
+    function getIconAction(row: Row<Category>) {
+        return {
+            content: { align: 'end' },
+            items: getRowItems(row)
+        }
+    }
+
+    const iconButton = {
+        icon: 'i-lucide-ellipsis-vertical',
+        color: 'neutral',
+        variant: 'ghost',
+        class: 'ml-auto'
+    }
+
+    const iconStyle = { class: 'text-right' }
 
     return {
         search,
         getRowItems,
         getHeaderSelect,
         getCellSelect,
-
         getHeaderName,
+        getIconAction,
+
+        iconButton,
+        iconStyle,
 
         columnFilters,
         rowSelection,

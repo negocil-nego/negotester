@@ -2,19 +2,19 @@
 import { getPaginationRowModel } from '@tanstack/table-core'
 import type { TableColumn } from '@nuxt/ui'
 import type { Category } from '~/types'
-import { upperFirst } from 'scule'
 
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
 const UButton = resolveComponent('UButton')
-
 const table = useTemplateRef('table')
 
 const {
-  getRowItems,
   getHeaderSelect,
   getCellSelect,
   getHeaderName,
+  getIconAction,
+  iconButton,
+  iconStyle,
   columnVisibility,
   columnFilters,
   rowSelection,
@@ -38,9 +38,7 @@ const columns: TableColumn<Category>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => {
-      return h(UButton, getHeaderName(column, column.getIsSorted()))
-    }
+    header: ({ column }) => h(UButton, getHeaderName(column, column.getIsSorted()))
   },
   {
     accessorKey: 'description',
@@ -50,24 +48,7 @@ const columns: TableColumn<Category>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      return h(
-        'div',
-        { class: 'text-right' },
-        h(
-          UDropdownMenu,
-          {
-            content: { align: 'end' },
-            items: getRowItems(row)
-          },
-          () =>
-            h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
-              class: 'ml-auto'
-            })
-        )
-      )
+      return h('div', iconStyle, h(UDropdownMenu, getIconAction(row), () => h(UButton, iconButton)))
     }
   }
 ]
@@ -80,7 +61,6 @@ const columns: TableColumn<Category>[] = [
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
-
         <template #right>
           <CategoryAddModal />
         </template>
@@ -90,19 +70,8 @@ const columns: TableColumn<Category>[] = [
     <template #body>
       <div class="flex flex-wrap items-center justify-between gap-1.5">
         <UInput v-model="search" class="max-w-sm" icon="i-lucide-search" placeholder="Pesquisar ..." />
-
         <div class="flex flex-wrap items-center gap-1.5">
-          <CategoryDeleteModal :count="table?.tableApi?.getFilteredSelectedRowModel().rows.length">
-            <UButton v-if="table?.tableApi?.getFilteredSelectedRowModel().rows.length" label="Delete" color="error"
-              variant="subtle" icon="i-lucide-trash">
-              <template #trailing>
-                <UKbd>
-                  {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length }}
-                </UKbd>
-              </template>
-            </UButton>
-          </CategoryDeleteModal>
-
+          <CategoryDeleteModal :table="table" />
           <CategoryDropdownMenu :table="table" />
         </div>
       </div>
@@ -119,19 +88,7 @@ const columns: TableColumn<Category>[] = [
           separator: 'h-0'
         }" />
 
-      <div class="flex items-center justify-between gap-3 border-t border-default pt-4 mt-auto">
-        <div class="text-sm text-muted">
-          {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
-          {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} row(s) selected.
-        </div>
-
-        <div class="flex items-center gap-1.5">
-          <UPagination :default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
-            :items-per-page="table?.tableApi?.getState().pagination.pageSize"
-            :total="table?.tableApi?.getFilteredRowModel().rows.length"
-            @update:page="(p: number) => table?.tableApi?.setPageIndex(p - 1)" />
-        </div>
-      </div>
+      <CorePagination :table="table" />
     </template>
   </UDashboardPanel>
 </template>

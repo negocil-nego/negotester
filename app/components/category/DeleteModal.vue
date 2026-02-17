@@ -1,11 +1,11 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
-  count?: number
-}>(), {
-  count: 0
-})
+const props = defineProps<{
+  table?: any
+}>()
 
 const open = ref(false)
+
+const count = computed(() => props.table?.tableApi?.getFilteredSelectedRowModel().rows.length)
 
 async function onSubmit() {
   await new Promise(resolve => setTimeout(resolve, 1000))
@@ -14,28 +14,22 @@ async function onSubmit() {
 </script>
 
 <template>
-  <UModal
-    v-model:open="open"
-    :title="`Delete ${count} customer${count > 1 ? 's' : ''}`"
-    :description="`Are you sure, this action cannot be undone.`"
-  >
-    <slot />
+  <UModal v-model:open="open" title="Eliminar categoria"
+    description="Tem certeza que deseja eliminar as categorias selecionadas?">
+
+    <UButton v-if="table?.tableApi?.getFilteredSelectedRowModel().rows.length" label="Eliminar" color="error"
+      variant="subtle" icon="i-lucide-trash">
+      <template #trailing>
+        <UKbd>
+          {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length }}
+        </UKbd>
+      </template>
+    </UButton>
 
     <template #body>
       <div class="flex justify-end gap-2">
-        <UButton
-          label="Cancel"
-          color="neutral"
-          variant="subtle"
-          @click="open = false"
-        />
-        <UButton
-          label="Delete"
-          color="error"
-          variant="solid"
-          loading-auto
-          @click="onSubmit"
-        />
+        <UButton label="Cancelar" color="neutral" variant="subtle" @click="open = false" />
+        <UButton label="Eliminar" color="error" variant="solid" loading-auto @click="onSubmit" />
       </div>
     </template>
   </UModal>
