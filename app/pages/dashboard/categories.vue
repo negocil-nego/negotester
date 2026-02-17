@@ -1,87 +1,36 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import { upperFirst } from 'scule'
 import { getPaginationRowModel } from '@tanstack/table-core'
-import type { Row } from '@tanstack/table-core'
+import type { TableColumn } from '@nuxt/ui'
 import type { Category } from '~/types'
+import { upperFirst } from 'scule'
 
-const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
+const UButton = resolveComponent('UButton')
 
-const toast = useToast()
 const table = useTemplateRef('table')
 
-const columnFilters = ref([{
-  id: 'email',
-  value: ''
-}])
-const columnVisibility = ref()
-const rowSelection = ref({ 1: true })
+const {
+  getRowItems,
+  getHeaderSelect,
+  getCellSelect,
+  getHeaderName,
+  columnVisibility,
+  columnFilters,
+  rowSelection,
+  pagination,
+  search
+} = useCategoryTable(table)
 
 const { data, status } = await useFetch<Category[]>('/api/categories', {
   lazy: true
 })
 
-function getRowItems(row: Row<Category>) {
-  return [
-    {
-      type: 'label',
-      label: 'Acção'
-    },
-    {
-      label: 'Copiar o ID',
-      icon: 'i-lucide-copy',
-      onSelect() {
-        navigator.clipboard.writeText(row.original.id.toString())
-        toast.add({
-          title: 'Copied to clipboard',
-          description: 'Customer ID copied to clipboard'
-        })
-      }
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: 'Editar categoria',
-      icon: 'i-lucide-edit'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: 'Eliminar categoria',
-      icon: 'i-lucide-trash',
-      color: 'error',
-      onSelect() {
-        toast.add({
-          title: 'Customer deleted',
-          description: 'The customer has been deleted.'
-        })
-      }
-    }
-  ]
-}
-
 const columns: TableColumn<Category>[] = [
   {
     id: 'select',
-    header: ({ table }) =>
-      h(UCheckbox, {
-        'modelValue': table.getIsSomePageRowsSelected()
-          ? 'indeterminate'
-          : table.getIsAllPageRowsSelected(),
-        'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
-          table.toggleAllPageRowsSelected(!!value),
-        'ariaLabel': 'Select all'
-      }),
-    cell: ({ row }) =>
-      h(UCheckbox, {
-        'modelValue': row.getIsSelected(),
-        'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
-        'ariaLabel': 'Select row'
-      })
+    header: ({ table }) => h(UCheckbox, getHeaderSelect(table)),
+    cell: ({ row }) => h(UCheckbox, getCellSelect(row))
   },
   {
     accessorKey: 'id',
@@ -90,20 +39,7 @@ const columns: TableColumn<Category>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
-      const isSorted = column.getIsSorted()
-
-      return h(UButton, {
-        color: 'neutral',
-        variant: 'ghost',
-        label: 'Nome',
-        icon: isSorted
-          ? isSorted === 'asc'
-            ? 'i-lucide-arrow-up-narrow-wide'
-            : 'i-lucide-arrow-down-wide-narrow'
-          : 'i-lucide-arrow-up-down',
-        class: '-mx-2.5',
-        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
-      })
+      return h(UButton, getHeaderName(column, column.getIsSorted()))
     }
   },
   {
@@ -120,9 +56,7 @@ const columns: TableColumn<Category>[] = [
         h(
           UDropdownMenu,
           {
-            content: {
-              align: 'end'
-            },
+            content: { align: 'end' },
             items: getRowItems(row)
           },
           () =>
@@ -137,42 +71,28 @@ const columns: TableColumn<Category>[] = [
     }
   }
 ]
-
-const email = computed({
-  get: (): string => {
-    return (table.value?.tableApi?.getColumn('email')?.getFilterValue() as string) || ''
-  },
-  set: (value: string) => {
-    table.value?.tableApi?.getColumn('email')?.setFilterValue(value || undefined)
-  }
-})
-
-const pagination = ref({
-  pageIndex: 0,
-  pageSize: 10
-})
 </script>
 
 <template>
-  <UDashboardPanel id="customers">
+  <UDashboardPanel id="categories">
     <template #header>
-      <UDashboardNavbar title="Customers">
+      <UDashboardNavbar title="Categorias">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
 
         <template #right>
-          <CustomersAddModal />
+          <CategoryAddModal />
         </template>
       </UDashboardNavbar>
     </template>
 
     <template #body>
       <div class="flex flex-wrap items-center justify-between gap-1.5">
-        <UInput v-model="email" class="max-w-sm" icon="i-lucide-search" placeholder="Filter emails..." />
+        <UInput v-model="search" class="max-w-sm" icon="i-lucide-search" placeholder="Filter emails..." />
 
         <div class="flex flex-wrap items-center gap-1.5">
-          <CustomersDeleteModal :count="table?.tableApi?.getFilteredSelectedRowModel().rows.length">
+          <CategoryDeleteModal :count="table?.tableApi?.getFilteredSelectedRowModel().rows.length">
             <UButton v-if="table?.tableApi?.getFilteredSelectedRowModel().rows.length" label="Delete" color="error"
               variant="subtle" icon="i-lucide-trash">
               <template #trailing>
@@ -181,25 +101,9 @@ const pagination = ref({
                 </UKbd>
               </template>
             </UButton>
-          </CustomersDeleteModal>
+          </CategoryDeleteModal>
 
-          <UDropdownMenu :items="table?.tableApi
-            ?.getAllColumns()
-            .filter((column: any) => column.getCanHide())
-            .map((column: any) => ({
-              label: upperFirst(column.id),
-              type: 'checkbox' as const,
-              checked: column.getIsVisible(),
-              onUpdateChecked(checked: boolean) {
-                table?.tableApi?.getColumn(column.id)?.toggleVisibility(!!checked)
-              },
-              onSelect(e?: Event) {
-                e?.preventDefault()
-              }
-            }))
-            " :content="{ align: 'end' }">
-            <UButton label="Colunas" color="neutral" variant="outline" trailing-icon="i-lucide-settings-2" />
-          </UDropdownMenu>
+          <CategoryDropdownMenu :table="table" />
         </div>
       </div>
 
