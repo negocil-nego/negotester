@@ -54,7 +54,7 @@ export interface Notification {
 
 export interface Category {
   id: number
-  title: string
+  name: string
   description?: string
   icon?: string
 }

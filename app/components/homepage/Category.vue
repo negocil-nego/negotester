@@ -16,7 +16,7 @@
                 <template #header>
                     <div class="flex items-center gap-2">
                         <Icon v-if="service.icon" :name="service.icon" class="text-base text-primary" size="34" />
-                        <div class="font-display text-md font-bold">{{ service.title }}</div>
+                        <div class="font-display text-md font-bold">{{ service.name }}</div>
                     </div>
                 </template>
                 <span class="text-sm">{{ service.description }}</span>
