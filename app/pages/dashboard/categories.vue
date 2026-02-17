@@ -89,7 +89,7 @@ const columns: TableColumn<Category>[] = [
 
     <template #body>
       <div class="flex flex-wrap items-center justify-between gap-1.5">
-        <UInput v-model="search" class="max-w-sm" icon="i-lucide-search" placeholder="Filter emails..." />
+        <UInput v-model="search" class="max-w-sm" icon="i-lucide-search" placeholder="Pesquisar ..." />
 
         <div class="flex flex-wrap items-center gap-1.5">
           <CategoryDeleteModal :count="table?.tableApi?.getFilteredSelectedRowModel().rows.length">
