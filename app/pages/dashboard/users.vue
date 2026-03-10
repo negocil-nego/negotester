@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { getPaginationRowModel } from '@tanstack/table-core'
 import type { TableColumn } from '@nuxt/ui'
-import type { Service } from '~/types'
+import type { User } from '~/types'
 
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
 const UButton = resolveComponent('UButton')
-const Icon = resolveComponent('Icon')
 const table = useTemplateRef('table')
 
 const {
@@ -18,13 +17,13 @@ const {
   rowSelection,
   pagination,
   search
-} = useServiceTable(table)
+} = useUserTable(table)
 
-const { data, status } = await useFetch<Service[]>('/api/services', {
+const { data, status } = await useFetch<User[]>('/api/users', {
   lazy: true
 })
 
-const columns: TableColumn<Service>[] = [
+const columns: TableColumn<User>[] = [
   {
     id: 'select',
     header: ({ table }) => h(UCheckbox, getHeaderSelect(table)),
@@ -35,27 +34,9 @@ const columns: TableColumn<Service>[] = [
     header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'id'))
   },
   {
-    accessorKey: 'name',
-    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Nome'))
-  },
-  {
-    accessorKey: 'Icone',
-    cell: ({ row }) => h(Icon, { name: row.original.icon, class: 'w-5 h-5' })
-  },
-  {
-    accessorKey: 'price',
-    header: 'Preço',
-    cell: ({ row }) => row.original.price
-  },
-  {
-    accessorKey: 'category',
-    header: 'Categoria',
-    cell: ({ row }) => row.original.category.name
-  },
-  {
-    accessorKey: 'description',
-    header: 'Descrição',
-    cell: ({ row }) => row.original.description
+    accessorKey: 'email',
+    header: 'Email',
+    cell: ({ row }) => row.original.email
   },
   {
     id: 'actions',
@@ -67,14 +48,14 @@ const columns: TableColumn<Service>[] = [
 </script>
 
 <template>
-  <UDashboardPanel id="services">
+  <UDashboardPanel id="users">
     <template #header>
-      <UDashboardNavbar title="Serviços">
+      <UDashboardNavbar title="Utilizadores">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <ServiceAddModal />
+          <UserAddModal />
         </template>
       </UDashboardNavbar>
     </template>
@@ -83,8 +64,8 @@ const columns: TableColumn<Service>[] = [
       <div class="flex flex-wrap items-center justify-between gap-1.5">
         <UInput v-model="search" class="max-w-sm" icon="i-lucide-search" placeholder="Pesquisar ..." />
         <div class="flex flex-wrap items-center gap-1.5">
-          <ServiceDeleteModal :table="table" />
-          <ServiceDropdownMenu :table="table" />
+          <UserDeleteModal :table="table" />
+          <UserDropdownMenu :table="table" />
         </div>
       </div>
 

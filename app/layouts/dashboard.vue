@@ -25,7 +25,7 @@ const links = [
   }, {
     label: 'Usuários',
     icon: 'i-lucide-users',
-    to: '/dashboard/customers',
+    to: '/dashboard/users',
     onSelect: () => {
       open.value = false
     }

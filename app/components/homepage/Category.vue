@@ -12,14 +12,14 @@
             </p>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
-            <UCard v-for="service in data" :key="service.id" variant="soft">
+            <UCard v-for="category in data" :key="category.id" variant="soft">
                 <template #header>
                     <div class="flex items-center gap-2">
-                        <Icon v-if="service.icon" :name="service.icon" class="text-base text-primary" size="34" />
-                        <div class="font-display text-md font-bold">{{ service.name }}</div>
+                        <Icon v-if="category.icon" :name="category.icon" class="text-base text-primary" size="34" />
+                        <div class="font-display text-md font-bold">{{ category.name }}</div>
                     </div>
                 </template>
-                <span class="text-sm">{{ service.description }}</span>
+                <span class="text-sm">{{ category.description }}</span>
                 <template #footer>
                     <div class="flex items-center gap-2  justify-start">
                         <UButton color="primary" size="sm" variant="outline">Ver mais</UButton>

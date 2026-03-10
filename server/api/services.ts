@@ -1,5 +1,10 @@
-import { SERVICES } from "../data/services"
+import { serverSupabaseClient } from '#supabase/server'
+import { toMapService } from '~/utils/mapper'
+import { Service } from "~/types"
 
-export default eventHandler(async () => {
-    return SERVICES
+export default eventHandler(async (event) => {
+    const client = await serverSupabaseClient(event)
+    const { data, error } = await client.from('tb_services').select('*, tb_categories(*)')
+    if (error) throw createError({ statusMessage: error.message })
+    return data.map(toMapService) as Service[]
 })

@@ -27,7 +27,7 @@
                             class="cursor-pointer hover:bg-primary hover:text-white transition-colors"
                             :class="{ 'bg-primary text-white': isSelected(service.id) }"
                             @click="toggleService(service)">
-                            <span class="text-sm">{{ service.title }}</span>
+                            <span class="text-sm">{{ service.name }}</span>
                             <Icon :name="isSelected(service.id) ? 'i-heroicons-minus' : 'i-heroicons-plus'"
                                 class="ml-2" />
                         </UBadge>
@@ -43,7 +43,7 @@
                         <UScrollArea v-slot="{ item, index }" :items="selectedServices"
                             class="h-[250px] hidden md:block">
                             <UBadge :key="index">
-                                {{ item.title }} ({{ item.price }} Kz)
+                                {{ item.name }} ({{ item.price }} Kz)
                                 <Icon name="i-heroicons-trash" class="ml-2" @click="removeService(item)" />
                             </UBadge>
                         </UScrollArea>
