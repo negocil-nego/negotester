@@ -1,13 +1,10 @@
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Row, Table } from "@tanstack/table-core"
 import type { Plan } from "~/types"
 
-async function usePlanDelete(plan: Plan) {
-    const { data, status } = await useFetch(`/api/plans/${plan.id}`, { method: 'DELETE', lazy: true })
-    return { data, status }
-}
-
-export function usePlanTable(table: any) {
+export function usePlanTable(table: any, onEdit: (plan: Plan) => void) {
     const toast = useToast()
+    const queryClient = useQueryClient()
     const columnVisibility = ref({ id: false })
     const rowSelection = ref({})
     const pagination = ref({ pageIndex: 0, pageSize: 10 })
@@ -23,6 +20,24 @@ export function usePlanTable(table: any) {
         }
     })
 
+    const deleteMutation = useMutation({
+        mutationFn: (planId: number) => $fetch(`/api/plans/${planId}`, { method: 'DELETE' }),
+        onSuccess: () => {
+             queryClient.invalidateQueries({ queryKey: ['plans'] })
+             toast.add({
+                 title: 'Plano eliminado',
+                 description: 'O plano foi eliminado com sucesso.'
+             })
+        },
+        onError: () => {
+             toast.add({
+                 title: 'Erro ao eliminar plano',
+                 description: 'O plano não pôde ser eliminado.',
+                 color: 'error'
+             })
+        }
+    })
+
     function getRowItems(row: Row<Plan>) {
         return [
             {
@@ -35,8 +50,8 @@ export function usePlanTable(table: any) {
                 onSelect() {
                     navigator.clipboard.writeText(row.original.id.toString())
                     toast.add({
-                        title: 'Copied to clipboard',
-                        description: 'Customer ID copied to clipboard'
+                        title: 'ID copiado',
+                        description: 'O ID do plano foi copiado'
                     })
                 }
             },
@@ -44,30 +59,21 @@ export function usePlanTable(table: any) {
                 type: 'separator'
             },
             {
-                label: 'Editar categoria',
-                icon: 'i-lucide-edit'
+                label: 'Editar plano',
+                icon: 'i-lucide-edit',
+                onSelect() {
+                    onEdit(row.original)
+                }
             },
             {
                 type: 'separator'
             },
             {
-                label: 'Eliminar categoria',
+                label: 'Eliminar plano',
                 icon: 'i-lucide-trash',
                 color: 'error',
-                onSelect: async () => {
-                    const { status } = await usePlanDelete(row.original)
-                    if (status.value === 'success') {
-                        toast.add({
-                            title: 'Categoria eliminada',
-                            description: 'A categoria foi eliminada com sucesso.'
-                        })
-                    } else {
-                        toast.add({
-                            title: 'Erro ao eliminar categoria',
-                            description: 'A categoria não foi eliminada.',
-                            color: 'error'
-                        })
-                    }
+                onSelect: () => {
+                    deleteMutation.mutate(row.original.id)
                 }
             }
         ]

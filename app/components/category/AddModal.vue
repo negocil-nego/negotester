@@ -10,7 +10,9 @@ const schema = z.object({
   icon: z.string().min(2, 'Icone muito curto').optional(),
   image: z.instanceof(File)
     .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      (file) => {
+        return ACCEPTED_IMAGE_TYPES.includes(file.type)
+      },
       'Arquivo inválido'
     )
     .optional(),

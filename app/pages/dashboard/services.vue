@@ -41,17 +41,7 @@ const columns: TableColumn<Service>[] = [
   {
     accessorKey: 'icon',
     header: 'Icone',
-    cell: ({ row }) => h(Icon, { name: row.original.icon || 'i-lucide-box', class: 'w-5 h-5' })
-  },
-  {
-    accessorKey: 'price',
-    header: 'Preço',
-    cell: ({ row }) => row.original.price
-  },
-  {
-    accessorKey: 'category',
-    header: 'Categoria',
-    cell: ({ row }) => row.original.category?.name || '-'
+    cell: ({ row }) => h(Icon, { name: row.original.icon, class: 'w-5 h-5' })
   },
   {
     accessorKey: 'description',
@@ -68,9 +58,9 @@ const columns: TableColumn<Service>[] = [
 </script>
 
 <template>
-  <UDashboardPanel id="services">
+  <UDashboardPanel id="categories">
     <template #header>
-      <UDashboardNavbar title="Serviços">
+      <UDashboardNavbar title="Categorias">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
@@ -92,7 +82,7 @@ const columns: TableColumn<Service>[] = [
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"
         v-model:row-selection="rowSelection" v-model:pagination="pagination" :pagination-options="{
           getPaginationRowModel: getPaginationRowModel()
-        }" class="shrink-0" :data="data || []" :columns="columns" :loading="status === 'pending'" :ui="{
+        }" class="shrink-0" :data="data" :columns="columns" :loading="status === 'pending'" :ui="{
           base: 'table-fixed border-separate border-spacing-0',
           thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
           tbody: '[&>tr]:last:[&>td]:border-b-0',

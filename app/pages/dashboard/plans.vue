@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { getPaginationRowModel } from '@tanstack/table-core'
+import { useQuery } from '@tanstack/vue-query'
 import type { TableColumn } from '@nuxt/ui'
 import type { Plan } from '~/types'
 
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
 const UButton = resolveComponent('UButton')
+const UBadge = resolveComponent('UBadge')
 const table = useTemplateRef('table')
+
+const isEditOpen = ref(false)
+const selectedPlan = ref<Plan>()
 
 const {
   getHeaderSelect,
@@ -17,10 +22,14 @@ const {
   rowSelection,
   pagination,
   search
-} = usePlanTable(table)
+} = usePlanTable(table, (plan) => {
+  selectedPlan.value = plan
+  isEditOpen.value = true
+})
 
-const { data, status } = await useFetch<Plan[]>('/api/plans', {
-  lazy: true
+const { data, isPending: pending } = useQuery({
+  queryKey: ['plans'],
+  queryFn: () => $fetch<Plan[]>('/api/plans')
 })
 
 const columns: TableColumn<Plan>[] = [
@@ -36,6 +45,26 @@ const columns: TableColumn<Plan>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Nome'))
+  },
+  {
+    accessorKey: 'price',
+    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Preço'))
+  },
+  {
+    accessorKey: 'billingCycle',
+    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Ciclo de Faturação')),
+    cell: ({ row }) => {
+      const color = {
+        DAY: 'success' as const,
+        MONTH: 'error' as const,
+        YEAR: 'warning' as const,
+        NONE: 'neutral' as const
+      }[row.original.billingCycle]
+
+      return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () =>
+        row.original.billingCycle
+      )
+    }
   },
   {
     accessorKey: 'description',
@@ -59,7 +88,7 @@ const columns: TableColumn<Plan>[] = [
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <PlanAddModal />
+          <PlanAddModal v-model:open="isEditOpen" :plan="selectedPlan" />
         </template>
       </UDashboardNavbar>
     </template>
@@ -76,7 +105,7 @@ const columns: TableColumn<Plan>[] = [
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"
         v-model:row-selection="rowSelection" v-model:pagination="pagination" :pagination-options="{
           getPaginationRowModel: getPaginationRowModel()
-        }" class="shrink-0" :data="data" :columns="columns" :loading="status === 'pending'" :ui="{
+        }" class="shrink-0" :data="data || []" :columns="columns" :loading="pending" :ui="{
           base: 'table-fixed border-separate border-spacing-0',
           thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
           tbody: '[&>tr]:last:[&>td]:border-b-0',

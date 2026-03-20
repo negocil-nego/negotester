@@ -16,7 +16,7 @@
                     Quero solicitar um orçamento
                 </UButton>
                 <UButton color="primary" variant="outline" class="p-4 lg:p-4 rounded-full md:px-20">
-                    Contacte-nos
+                    Começar de graça
                 </UButton>
             </div>
         </div>
