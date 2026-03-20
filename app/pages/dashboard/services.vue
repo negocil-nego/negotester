@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getPaginationRowModel } from '@tanstack/table-core'
+import { useQuery } from '@tanstack/vue-query'
 import type { TableColumn } from '@nuxt/ui'
 import type { Service } from '~/types'
 
@@ -8,6 +9,9 @@ const UCheckbox = resolveComponent('UCheckbox')
 const UButton = resolveComponent('UButton')
 const Icon = resolveComponent('Icon')
 const table = useTemplateRef('table')
+
+const isEditOpen = ref(false)
+const selectedService = ref<Service>()
 
 const {
   getHeaderSelect,
@@ -18,10 +22,14 @@ const {
   rowSelection,
   pagination,
   search
-} = useServiceTable(table)
+} = useServiceTable(table, (service) => {
+  selectedService.value = service
+  isEditOpen.value = true
+})
 
-const { data, status } = await useFetch<Service[]>('/api/services', {
-  lazy: true
+const { data, isPending: pending } = useQuery({
+  queryKey: ['services'],
+  queryFn: () => $fetch<Service[]>('/api/services')
 })
 
 const columns: TableColumn<Service>[] = [
@@ -60,12 +68,12 @@ const columns: TableColumn<Service>[] = [
 <template>
   <UDashboardPanel id="categories">
     <template #header>
-      <UDashboardNavbar title="Categorias">
+      <UDashboardNavbar title="Serviços">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <ServiceAddModal />
+          <ServiceAddModal v-model:open="isEditOpen" :service="selectedService" @cancel="isEditOpen = false" />
         </template>
       </UDashboardNavbar>
     </template>
@@ -82,7 +90,7 @@ const columns: TableColumn<Service>[] = [
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"
         v-model:row-selection="rowSelection" v-model:pagination="pagination" :pagination-options="{
           getPaginationRowModel: getPaginationRowModel()
-        }" class="shrink-0" :data="data" :columns="columns" :loading="status === 'pending'" :ui="{
+        }" class="shrink-0" :data="data || []" :columns="columns" :loading="pending" :ui="{
           base: 'table-fixed border-separate border-spacing-0',
           thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
           tbody: '[&>tr]:last:[&>td]:border-b-0',

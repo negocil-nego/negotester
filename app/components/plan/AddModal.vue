@@ -16,7 +16,15 @@ const schema = z.object({
 type Schema = z.output<typeof schema>
 
 const open = defineModel<boolean>('open', { default: false })
-const isEditing = computed(() => !!props.plan)
+
+const justClickedNew = ref(false)
+const isEditingInternal = ref(false)
+const isEditing = computed(() => isEditingInternal.value)
+
+function onOpenNew() {
+  justClickedNew.value = true
+  open.value = true
+}
 
 const state = reactive({
   name: '',
@@ -27,7 +35,12 @@ const state = reactive({
 
 watch(open, (isOpen) => {
   if (isOpen) {
-    if (props.plan) {
+    if (justClickedNew.value) {
+      justClickedNew.value = false
+      isEditingInternal.value = false
+      Object.assign(state, { name: '', price: 0, description: '', billingCycle: 'NONE' })
+    } else if (props.plan) {
+      isEditingInternal.value = true
       Object.assign(state, {
         name: props.plan.name,
         price: props.plan.price,
@@ -35,9 +48,13 @@ watch(open, (isOpen) => {
         billingCycle: props.plan.billingCycle
       })
     } else {
+      isEditingInternal.value = false
       Object.assign(state, { name: '', price: 0, description: '', billingCycle: 'NONE' })
     }
   } else {
+    setTimeout(() => {
+      isEditingInternal.value = false
+    }, 200)
     Object.assign(state, { name: '', price: 0, description: '', billingCycle: 'NONE' })
   }
 })
@@ -75,7 +92,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <div>
-    <UButton v-if="!isEditing" label="Novo Plano" icon="i-lucide-plus" @click="open = true" />
+    <UButton v-if="!isEditing" label="Novo Plano" icon="i-lucide-plus" @click="onOpenNew" />
 
     <UModal v-model:open="open" :title="isEditing ? 'Editar Plano de Serviço' : 'Novo Plano de Serviço'"
       :description="isEditing ? 'Atualize os detalhes do plano' : 'Configure os detalhes do preço e faturação'">

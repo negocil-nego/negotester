@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getPaginationRowModel } from '@tanstack/table-core'
+import { useQuery } from '@tanstack/vue-query'
 import type { TableColumn } from '@nuxt/ui'
 import type { Category } from '~/types'
 
@@ -7,6 +8,9 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
 const UButton = resolveComponent('UButton')
 const table = useTemplateRef('table')
+
+const isEditOpen = ref(false)
+const selectedCategory = ref<Category>()
 
 const {
   getHeaderSelect,
@@ -17,10 +21,14 @@ const {
   rowSelection,
   pagination,
   search
-} = useCategoryTable(table)
+} = useCategoryTable(table, (category) => {
+  selectedCategory.value = category
+  isEditOpen.value = true
+})
 
-const { data, status } = await useFetch<Category[]>('/api/categories', {
-  lazy: true
+const { data, isPending: pending } = useQuery({
+  queryKey: ['categories'],
+  queryFn: () => $fetch<Category[]>('/api/categories')
 })
 
 const columns: TableColumn<Category>[] = [
@@ -59,7 +67,7 @@ const columns: TableColumn<Category>[] = [
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <CategoryAddModal />
+          <CategoryAddModal v-model:open="isEditOpen" :category="selectedCategory" />
         </template>
       </UDashboardNavbar>
     </template>
@@ -76,7 +84,7 @@ const columns: TableColumn<Category>[] = [
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"
         v-model:row-selection="rowSelection" v-model:pagination="pagination" :pagination-options="{
           getPaginationRowModel: getPaginationRowModel()
-        }" class="shrink-0" :data="data" :columns="columns" :loading="status === 'pending'" :ui="{
+        }" class="shrink-0" :data="data || []" :columns="columns" :loading="pending" :ui="{
           base: 'table-fixed border-separate border-spacing-0',
           thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
           tbody: '[&>tr]:last:[&>td]:border-b-0',

@@ -1,15 +1,12 @@
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Row, Table } from "@tanstack/table-core"
 import type { Service } from "~/types"
 
-async function useServiceDelete(job: Service) {
-    const { data, status } = await useFetch(`/api/services/${job.id}`, { method: 'DELETE', lazy: true })
-    return { data, status }
-}
-
-export function useServiceTable(table: any) {
+export function useServiceTable(table: any, onEdit: (service: Service) => void) {
     const toast = useToast()
-    const columnVisibility = ref({ id: false })
+    const queryClient = useQueryClient()
     const rowSelection = ref({})
+    const columnVisibility = ref({ id: false })
     const pagination = ref({ pageIndex: 0, pageSize: 10 })
 
     const columnFilters = ref([{ id: 'name', value: '' }])
@@ -20,6 +17,24 @@ export function useServiceTable(table: any) {
         },
         set: (value: string) => {
             table.value?.tableApi?.getColumn('name')?.setFilterValue(value || undefined)
+        }
+    })
+
+    const deleteMutation = useMutation({
+        mutationFn: (serviceId: number) => $fetch(`/api/services/${serviceId}`, { method: 'DELETE' }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['services'] })
+            toast.add({
+                title: 'Serviço eliminado',
+                description: 'O serviço foi eliminado com sucesso.'
+            })
+        },
+        onError: () => {
+            toast.add({
+                title: 'Erro ao eliminar serviço',
+                description: 'O serviço não pôde ser eliminado.',
+                color: 'error'
+            })
         }
     })
 
@@ -35,8 +50,8 @@ export function useServiceTable(table: any) {
                 onSelect() {
                     navigator.clipboard.writeText(row.original.id.toString())
                     toast.add({
-                        title: 'Copied to clipboard',
-                        description: 'Customer ID copied to clipboard'
+                        title: 'ID copiado',
+                        description: 'O ID do serviço foi copiado'
                     })
                 }
             },
@@ -44,30 +59,21 @@ export function useServiceTable(table: any) {
                 type: 'separator'
             },
             {
-                label: 'Editar categoria',
-                icon: 'i-lucide-edit'
+                label: 'Editar serviço',
+                icon: 'i-lucide-edit',
+                onSelect() {
+                    onEdit(row.original)
+                }
             },
             {
                 type: 'separator'
             },
             {
-                label: 'Eliminar categoria',
+                label: 'Eliminar serviço',
                 icon: 'i-lucide-trash',
                 color: 'error',
-                onSelect: async () => {
-                    const { status } = await useServiceDelete(row.original)
-                    if (status.value === 'success') {
-                        toast.add({
-                            title: 'Categoria eliminada',
-                            description: 'A categoria foi eliminada com sucesso.'
-                        })
-                    } else {
-                        toast.add({
-                            title: 'Erro ao eliminar categoria',
-                            description: 'A categoria não foi eliminada.',
-                            color: 'error'
-                        })
-                    }
+                onSelect: () => {
+                    deleteMutation.mutate(row.original.id)
                 }
             }
         ]

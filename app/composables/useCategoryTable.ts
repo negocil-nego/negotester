@@ -1,13 +1,10 @@
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Row, Table } from "@tanstack/table-core"
 import type { Category } from "~/types"
 
-async function useCategoryDelete(category: Category) {
-    const { data, status } = await useFetch(`/api/categories/${category.id}`, { method: 'DELETE', lazy: true })
-    return { data, status }
-}
-
-export function useCategoryTable(table: any) {
+export function useCategoryTable(table: any, onEdit: (category: Category) => void) {
     const toast = useToast()
+    const queryClient = useQueryClient()
     const columnVisibility = ref({ id: false })
     const rowSelection = ref({})
     const pagination = ref({ pageIndex: 0, pageSize: 10 })
@@ -23,6 +20,24 @@ export function useCategoryTable(table: any) {
         }
     })
 
+    const deleteMutation = useMutation({
+        mutationFn: (categoryId: number) => $fetch(`/api/categories/${categoryId}`, { method: 'DELETE' }),
+        onSuccess: () => {
+             queryClient.invalidateQueries({ queryKey: ['categories'] })
+             toast.add({
+                 title: 'Categoria eliminada',
+                 description: 'A categoria foi eliminada com sucesso.'
+             })
+        },
+        onError: () => {
+             toast.add({
+                 title: 'Erro ao eliminar categoria',
+                 description: 'A categoria não pôde ser eliminada.',
+                 color: 'error'
+             })
+        }
+    })
+
     function getRowItems(row: Row<Category>) {
         return [
             {
@@ -35,8 +50,8 @@ export function useCategoryTable(table: any) {
                 onSelect() {
                     navigator.clipboard.writeText(row.original.id.toString())
                     toast.add({
-                        title: 'Copied to clipboard',
-                        description: 'Customer ID copied to clipboard'
+                        title: 'ID copiado',
+                        description: 'O ID da categoria foi copiado'
                     })
                 }
             },
@@ -45,7 +60,10 @@ export function useCategoryTable(table: any) {
             },
             {
                 label: 'Editar categoria',
-                icon: 'i-lucide-edit'
+                icon: 'i-lucide-edit',
+                onSelect() {
+                    onEdit(row.original)
+                }
             },
             {
                 type: 'separator'
@@ -54,20 +72,8 @@ export function useCategoryTable(table: any) {
                 label: 'Eliminar categoria',
                 icon: 'i-lucide-trash',
                 color: 'error',
-                onSelect: async () => {
-                    const { status } = await useCategoryDelete(row.original)
-                    if (status.value === 'success') {
-                        toast.add({
-                            title: 'Categoria eliminada',
-                            description: 'A categoria foi eliminada com sucesso.'
-                        })
-                    } else {
-                        toast.add({
-                            title: 'Erro ao eliminar categoria',
-                            description: 'A categoria não foi eliminada.',
-                            color: 'error'
-                        })
-                    }
+                onSelect: () => {
+                    deleteMutation.mutate(row.original.id)
                 }
             }
         ]
