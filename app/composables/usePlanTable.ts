@@ -1,12 +1,12 @@
 import type { Row, Table } from "@tanstack/table-core"
-import type { Category } from "~/types"
+import type { Plan } from "~/types"
 
-async function useCategoryDelete(category: Category) {
-    const { data, status } = await useFetch(`/api/categories/${category.id}`, { method: 'DELETE', lazy: true })
+async function usePlanDelete(plan: Plan) {
+    const { data, status } = await useFetch(`/api/plans/${plan.id}`, { method: 'DELETE', lazy: true })
     return { data, status }
 }
 
-export function useCategoryTable(table: any) {
+export function usePlanTable(table: any) {
     const toast = useToast()
     const columnVisibility = ref({ id: false })
     const rowSelection = ref({})
@@ -23,7 +23,7 @@ export function useCategoryTable(table: any) {
         }
     })
 
-    function getRowItems(row: Row<Category>) {
+    function getRowItems(row: Row<Plan>) {
         return [
             {
                 type: 'label',
@@ -55,7 +55,7 @@ export function useCategoryTable(table: any) {
                 icon: 'i-lucide-trash',
                 color: 'error',
                 onSelect: async () => {
-                    const { status } = await useCategoryDelete(row.original)
+                    const { status } = await usePlanDelete(row.original)
                     if (status.value === 'success') {
                         toast.add({
                             title: 'Categoria eliminada',
@@ -73,7 +73,7 @@ export function useCategoryTable(table: any) {
         ]
     }
 
-    function getHeaderSelect(table: Table<Category>) {
+    function getHeaderSelect(table: Table<Plan>) {
         return {
             'modelValue': table.getIsSomePageRowsSelected() ? 'indeterminate' : table.getIsAllPageRowsSelected(),
             'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
@@ -82,7 +82,7 @@ export function useCategoryTable(table: any) {
         }
     }
 
-    function getCellSelect(row: Row<Category>) {
+    function getCellSelect(row: Row<Plan>) {
         return {
             'modelValue': row.getIsSelected(),
             'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
@@ -90,7 +90,7 @@ export function useCategoryTable(table: any) {
         }
     }
 
-    function getIconAction(row: Row<Category>) {
+    function getIconAction(row: Row<Plan>) {
         return {
             content: { align: 'end' },
             items: getRowItems(row)

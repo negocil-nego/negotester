@@ -37,6 +37,13 @@ const links = [
       open.value = false
     }
   }, {
+    label: 'Planos',
+    icon: 'i-lucide-copy',
+    to: '/dashboard/plans',
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
     label: 'Serviços',
     icon: 'i-lucide-layers',
     to: '/dashboard/services',
@@ -132,7 +139,6 @@ onMounted(async () => {
         <UDashboardSearchButton :collapsed="collapsed" class="bg-transparent ring-default" />
 
         <UNavigationMenu :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip popover />
-
       </template>
 
       <template #footer="{ collapsed }">

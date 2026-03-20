@@ -73,3 +73,13 @@ export interface Range {
   start: Date
   end: Date
 }
+
+export type BillingCycle = 'DAY' | 'MONTH' | 'YEAR' | 'NONE'
+
+export interface Plan {
+  id: number
+  name: string
+  description?: string
+  price: number
+  billingCycle: BillingCycle
+}

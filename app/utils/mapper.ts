@@ -1,6 +1,8 @@
 import type { Category, Service } from "~/types";
 
 export function toMapCategory(row: any): Category {
+    if (!row) return {} as Category;
+
     return {
         id: row.id ?? 0,
         name: row.name ?? '',

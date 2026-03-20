@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { getPaginationRowModel } from '@tanstack/table-core'
 import type { TableColumn } from '@nuxt/ui'
-import type { Service } from '~/types'
+import type { Plan } from '~/types'
 
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
 const UButton = resolveComponent('UButton')
-const Icon = resolveComponent('Icon')
 const table = useTemplateRef('table')
 
 const {
@@ -18,13 +17,13 @@ const {
   rowSelection,
   pagination,
   search
-} = useServiceTable(table)
+} = usePlanTable(table)
 
-const { data, status } = await useFetch<Service[]>('/api/services', {
+const { data, status } = await useFetch<Plan[]>('/api/plans', {
   lazy: true
 })
 
-const columns: TableColumn<Service>[] = [
+const columns: TableColumn<Plan>[] = [
   {
     id: 'select',
     header: ({ table }) => h(UCheckbox, getHeaderSelect(table)),
@@ -37,21 +36,6 @@ const columns: TableColumn<Service>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Nome'))
-  },
-  {
-    accessorKey: 'icon',
-    header: 'Icone',
-    cell: ({ row }) => h(Icon, { name: row.original.icon || 'i-lucide-box', class: 'w-5 h-5' })
-  },
-  {
-    accessorKey: 'price',
-    header: 'Preço',
-    cell: ({ row }) => row.original.price
-  },
-  {
-    accessorKey: 'category',
-    header: 'Categoria',
-    cell: ({ row }) => row.original.category?.name || '-'
   },
   {
     accessorKey: 'description',
@@ -68,14 +52,14 @@ const columns: TableColumn<Service>[] = [
 </script>
 
 <template>
-  <UDashboardPanel id="services">
+  <UDashboardPanel id="Planos">
     <template #header>
-      <UDashboardNavbar title="Serviços">
+      <UDashboardNavbar title="Planos">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <ServiceAddModal />
+          <PlanAddModal />
         </template>
       </UDashboardNavbar>
     </template>
@@ -84,15 +68,15 @@ const columns: TableColumn<Service>[] = [
       <div class="flex flex-wrap items-center justify-between gap-1.5">
         <UInput v-model="search" class="max-w-sm" icon="i-lucide-search" placeholder="Pesquisar ..." />
         <div class="flex flex-wrap items-center gap-1.5">
-          <ServiceDeleteModal :table="table" />
-          <ServiceDropdownMenu :table="table" />
+          <PlanDeleteModal :table="table" />
+          <PlanDropdownMenu :table="table" />
         </div>
       </div>
 
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"
         v-model:row-selection="rowSelection" v-model:pagination="pagination" :pagination-options="{
           getPaginationRowModel: getPaginationRowModel()
-        }" class="shrink-0" :data="data || []" :columns="columns" :loading="status === 'pending'" :ui="{
+        }" class="shrink-0" :data="data" :columns="columns" :loading="status === 'pending'" :ui="{
           base: 'table-fixed border-separate border-spacing-0',
           thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
           tbody: '[&>tr]:last:[&>td]:border-b-0',
