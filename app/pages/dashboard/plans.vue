@@ -11,6 +11,7 @@ const UBadge = resolveComponent('UBadge')
 const table = useTemplateRef('table')
 
 const isEditOpen = ref(false)
+const isAddServiceOpen = ref(false)
 const selectedPlan = ref<Plan>()
 
 const {
@@ -22,9 +23,14 @@ const {
   rowSelection,
   pagination,
   search
-} = usePlanTable(table, (plan) => {
-  selectedPlan.value = plan
-  isEditOpen.value = true
+} = usePlanTable(table, (plan, sectionType) => {
+  if (sectionType === PlanSectionType.EDIT) {
+    selectedPlan.value = plan
+    isEditOpen.value = true
+  } else if (sectionType === PlanSectionType.ATTRIBUTE_SERVICE) {
+    selectedPlan.value = plan
+    isAddServiceOpen.value = true
+  }
 })
 
 const { data, isPending: pending } = useQuery({
@@ -101,6 +107,8 @@ const columns: TableColumn<Plan>[] = [
           <PlanDropdownMenu :table="table" />
         </div>
       </div>
+
+      <PlanAddServiceModal v-if="isAddServiceOpen" v-model:open="isAddServiceOpen" :plan="selectedPlan" @cancel="isAddServiceOpen = false" />
 
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"
         v-model:row-selection="rowSelection" v-model:pagination="pagination" :pagination-options="{

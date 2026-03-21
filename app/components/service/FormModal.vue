@@ -19,20 +19,12 @@ function onOpenNew() {
   open.value = true
 }
 
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
-
 const schema = z.object({
   name: z.string().min(2, 'Nome muito curto'),
   price: z.number().min(0, 'O preço não pode ser negativo'),
   description: z.string().min(2, 'Descrição muito curta'),
   icon: z.string().min(2, 'Icone muito curto').optional(),
-  category: z.any().refine(val => val && val.id, 'Categoria é obrigatória'),
-  image: z.instanceof(File)
-    .refine(
-      file => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      'Arquivo inválido'
-    )
-    .optional(),
+  category: z.any().refine(val => val && val.id, 'Categoria é obrigatória')
 })
 
 type Schema = z.output<typeof schema>
@@ -42,8 +34,7 @@ const state = reactive<Partial<Schema>>({
   price: 0,
   description: '',
   icon: '',
-  category: undefined,
-  image: undefined
+  category: undefined
 })
 
 watch(open, (isOpen) => {
@@ -105,7 +96,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
   mutate(event.data)
 }
 
-function onCancel() {
+const onCancel = () => {
   if (props.onCancel) props.onCancel()
   open.value = false
 }
@@ -118,11 +109,6 @@ function onCancel() {
       :description="isEditing ? 'Atualize os detalhes do serviço' : 'Adicione um novo serviço ao sistema'">
       <template #body>
         <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-          <UFormField label="Imagem" placeholder="Imagem do serviço" name="image">
-            <UFileUpload color="neutral" accept="image/*" label="Arrasta e solta a imagem"
-              description="SVG, PNG, JPG or GIF (max. 2MB)" class="w-full min-h-25" v-model="state.image" highlight />
-          </UFormField>
-
           <div class="grid grid-cols-2 gap-4">
             <UFormField label="Nome" name="name" required>
               <UInput v-model="state.name" placeholder="Nome do serviço" class="w-full" />
@@ -137,13 +123,11 @@ function onCancel() {
           <div class="grid grid-cols-2 gap-4">
             <UFormField label="Categoria" name="category" required>
               <USelectMenu v-model="state.category" :loading="loadingCategories" :items="categories || []"
-                option-attribute="name" class="w-full" placeholder="Selecione..." />
+                :label-key="'name'" class="w-full" placeholder="Selecione..." />
             </UFormField>
 
             <UFormField label="Icone" name="icon">
-              <!-- If CoreInputIcon doesn't support v-model, you can use UInput -->
-              <!-- <CoreInputIcon v-model="state.icon" /> -->
-              <UInput v-model="state.icon" placeholder="Icone" class="w-full" />
+              <CoreInputIcon v-model="state.icon" />
             </UFormField>
           </div>
 

@@ -2,7 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Row, Table } from "@tanstack/table-core"
 import type { Plan } from "~/types"
 
-export function usePlanTable(table: any, onEdit: (plan: Plan) => void) {
+export enum PlanSectionType {
+    ATTRIBUTE_SERVICE = 'ATTRIBUTE_SERVICE',
+    EDIT = 'EDIT'
+}
+
+export function usePlanTable(table: any, onEdit: (plan: Plan, sectionType: PlanSectionType) => void) {
     const toast = useToast()
     const queryClient = useQueryClient()
     const columnVisibility = ref({ id: false })
@@ -59,10 +64,20 @@ export function usePlanTable(table: any, onEdit: (plan: Plan) => void) {
                 type: 'separator'
             },
             {
+                label: 'Adicionar serviço',
+                icon: 'i-lucide-plus',
+                onSelect() {
+                    onEdit(row.original, PlanSectionType.ATTRIBUTE_SERVICE)
+                }
+            },
+            {
+                type: 'separator'
+            },
+            {
                 label: 'Editar plano',
                 icon: 'i-lucide-edit',
                 onSelect() {
-                    onEdit(row.original)
+                    onEdit(row.original, PlanSectionType.EDIT)
                 }
             },
             {

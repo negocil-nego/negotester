@@ -2,7 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Row, Table } from "@tanstack/table-core"
 import type { Service } from "~/types"
 
-export function useServiceTable(table: any, onEdit: (service: Service) => void) {
+export enum SectionType {
+    ATTRIBUTE_PLAN = 'ATTRIBUTE_PLAN',
+    EDIT = 'EDIT'
+}
+
+export function useServiceTable(table: any, onEdit: (service: Service, sectionType: SectionType) => void) {
     const toast = useToast()
     const queryClient = useQueryClient()
     const rowSelection = ref({})
@@ -55,19 +60,23 @@ export function useServiceTable(table: any, onEdit: (service: Service) => void) 
                     })
                 }
             },
+            { type: 'separator' },
             {
-                type: 'separator'
+                label: 'Adicionar plano',
+                icon: 'i-lucide-plus',
+                onSelect() {
+                    onEdit(row.original, SectionType.ATTRIBUTE_PLAN)
+                }
             },
+            { type: 'separator' },
             {
                 label: 'Editar serviço',
                 icon: 'i-lucide-edit',
                 onSelect() {
-                    onEdit(row.original)
+                    onEdit(row.original, SectionType.EDIT)
                 }
             },
-            {
-                type: 'separator'
-            },
+            { type: 'separator' },
             {
                 label: 'Eliminar serviço',
                 icon: 'i-lucide-trash',

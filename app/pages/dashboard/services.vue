@@ -6,11 +6,13 @@ import type { Service } from '~/types'
 
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
+const UTooltip = resolveComponent('UTooltip')
 const UButton = resolveComponent('UButton')
 const Icon = resolveComponent('Icon')
 const table = useTemplateRef('table')
 
 const isEditOpen = ref(false)
+const isAddPlanOpen = ref(false)
 const selectedService = ref<Service>()
 
 const {
@@ -22,9 +24,14 @@ const {
   rowSelection,
   pagination,
   search
-} = useServiceTable(table, (service) => {
-  selectedService.value = service
-  isEditOpen.value = true
+} = useServiceTable(table, (service, sectionType) => {
+  if (sectionType === SectionType.EDIT) {
+    selectedService.value = service
+    isEditOpen.value = true
+  } else if (sectionType === SectionType.ATTRIBUTE_PLAN) {
+    selectedService.value = service
+    isAddPlanOpen.value = !isAddPlanOpen.value
+  }
 })
 
 const { data, isPending: pending } = useQuery({
@@ -54,7 +61,7 @@ const columns: TableColumn<Service>[] = [
   {
     accessorKey: 'description',
     header: 'Descrição',
-    cell: ({ row }) => row.original.description
+    cell: ({ row }) => h(UTooltip, { text: row.original.description }, () => h(UButton, { variant: 'ghost', color: 'neutral', class: 'font-normal' }, row.original.description!.substring(0, 40) + '...'))
   },
   {
     id: 'actions',
@@ -73,7 +80,7 @@ const columns: TableColumn<Service>[] = [
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <ServiceAddModal v-model:open="isEditOpen" :service="selectedService" @cancel="isEditOpen = false" />
+          <ServiceFormModal v-model:open="isEditOpen" :service="selectedService" @cancel="isEditOpen = false" />
         </template>
       </UDashboardNavbar>
     </template>
@@ -86,6 +93,9 @@ const columns: TableColumn<Service>[] = [
           <ServiceDropdownMenu :table="table" />
         </div>
       </div>
+
+      <ServiceAddPlanModal v-if="isAddPlanOpen" v-model:open="isAddPlanOpen" :service="selectedService"
+        @cancel="isAddPlanOpen = false" />
 
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"
         v-model:row-selection="rowSelection" v-model:pagination="pagination" :pagination-options="{
