@@ -2,9 +2,29 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Row, Table } from "@tanstack/table-core"
 import type { Service } from "~/types"
 
-export function useServiceTable(table: any, onEdit: (service: Service) => void) {
+export function useServiceTable(table?: any, onEdit?: (service: Service) => void) {
     const toast = useToast()
     const queryClient = useQueryClient()
+    const supabase = useSupabaseClient()
+
+    async function fetchServices() {
+        const { data, error } = await supabase.from('tb_services').select('*')
+        if (error) throw new Error(error.message)
+        return data as Service[]
+    }
+
+    async function createService(newService: any) {
+        const { data, error } = await supabase.from('tb_services').insert(newService).select()
+        if (error) throw new Error(error.message)
+        return data
+    }
+
+    async function updateService(id: number, updatedService: any) {
+        const { data, error } = await supabase.from('tb_services').update(updatedService).eq('id', id).select()
+        if (error) throw new Error(error.message)
+        return data
+    }
+
     const rowSelection = ref({})
     const columnVisibility = ref({ id: false })
     const pagination = ref({ pageIndex: 0, pageSize: 10 })
@@ -13,15 +33,19 @@ export function useServiceTable(table: any, onEdit: (service: Service) => void) 
 
     const search = computed({
         get: (): string => {
+            if (!table) return ''
             return (table.value?.tableApi?.getColumn('name')?.getFilterValue() as string) || ''
         },
         set: (value: string) => {
-            table.value?.tableApi?.getColumn('name')?.setFilterValue(value || undefined)
+            if (table) table.value?.tableApi?.getColumn('name')?.setFilterValue(value || undefined)
         }
     })
 
     const deleteMutation = useMutation({
-        mutationFn: (serviceId: number) => $fetch(`/api/services/${serviceId}`, { method: 'DELETE' }),
+        mutationFn: async (serviceId: number) => {
+            const { error } = await supabase.from('tb_services').delete().eq('id', serviceId)
+            if (error) throw new Error(error.message)
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['services'] })
             toast.add({
@@ -62,7 +86,7 @@ export function useServiceTable(table: any, onEdit: (service: Service) => void) 
                 label: 'Editar serviço',
                 icon: 'i-lucide-edit',
                 onSelect() {
-                    onEdit(row.original)
+                    if (onEdit) onEdit(row.original)
                 }
             },
             {
@@ -104,6 +128,10 @@ export function useServiceTable(table: any, onEdit: (service: Service) => void) 
     }
 
     return {
+        fetchServices,
+        createService,
+        updateService,
+
         search,
         getRowItems,
         getHeaderSelect,

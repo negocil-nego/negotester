@@ -2,9 +2,29 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Row, Table } from "@tanstack/table-core"
 import type { Category } from "~/types"
 
-export function useCategoryTable(table: any, onEdit: (category: Category) => void) {
+export function useCategoryTable(table?: any, onEdit?: (category: Category) => void) {
     const toast = useToast()
     const queryClient = useQueryClient()
+    const supabase = useSupabaseClient()
+
+    async function fetchCategories() {
+        const { data, error } = await supabase.from('tb_categories').select('*')
+        if (error) throw new Error(error.message)
+        return data as Category[]
+    }
+
+    async function createCategory(item: any) {
+        const { data, error } = await supabase.from('tb_categories').insert(item).select()
+        if (error) throw new Error(error.message)
+        return data
+    }
+
+    async function updateCategory(id: number, item: any) {
+        const { data, error } = await supabase.from('tb_categories').update(item).eq('id', id).select()
+        if (error) throw new Error(error.message)
+        return data
+    }
+
     const columnVisibility = ref({ id: false })
     const rowSelection = ref({})
     const pagination = ref({ pageIndex: 0, pageSize: 10 })
@@ -13,28 +33,32 @@ export function useCategoryTable(table: any, onEdit: (category: Category) => voi
 
     const search = computed({
         get: (): string => {
+            if (!table) return ''
             return (table.value?.tableApi?.getColumn('name')?.getFilterValue() as string) || ''
         },
         set: (value: string) => {
-            table.value?.tableApi?.getColumn('name')?.setFilterValue(value || undefined)
+            if (table) table.value?.tableApi?.getColumn('name')?.setFilterValue(value || undefined)
         }
     })
 
     const deleteMutation = useMutation({
-        mutationFn: (categoryId: number) => $fetch(`/api/categories/${categoryId}`, { method: 'DELETE' }),
+        mutationFn: async (categoryId: number) => {
+            const { error } = await supabase.from('tb_categories').delete().eq('id', categoryId)
+            if (error) throw new Error(error.message)
+        },
         onSuccess: () => {
-             queryClient.invalidateQueries({ queryKey: ['categories'] })
-             toast.add({
-                 title: 'Categoria eliminada',
-                 description: 'A categoria foi eliminada com sucesso.'
-             })
+            queryClient.invalidateQueries({ queryKey: ['categories'] })
+            toast.add({
+                title: 'Categoria eliminada',
+                description: 'A categoria foi eliminada com sucesso.'
+            })
         },
         onError: () => {
-             toast.add({
-                 title: 'Erro ao eliminar categoria',
-                 description: 'A categoria não pôde ser eliminada.',
-                 color: 'error'
-             })
+            toast.add({
+                title: 'Erro ao eliminar categoria',
+                description: 'A categoria não pôde ser eliminada.',
+                color: 'error'
+            })
         }
     })
 
@@ -62,7 +86,7 @@ export function useCategoryTable(table: any, onEdit: (category: Category) => voi
                 label: 'Editar categoria',
                 icon: 'i-lucide-edit',
                 onSelect() {
-                    onEdit(row.original)
+                    if (onEdit) onEdit(row.original)
                 }
             },
             {
@@ -104,6 +128,10 @@ export function useCategoryTable(table: any, onEdit: (category: Category) => voi
     }
 
     return {
+        fetchCategories,
+        createCategory,
+        updateCategory,
+
         search,
         getRowItems,
         getHeaderSelect,

@@ -20,7 +20,8 @@ const {
   columnFilters,
   rowSelection,
   pagination,
-  search
+  search,
+  fetchCategories
 } = useCategoryTable(table, (category) => {
   selectedCategory.value = category
   isEditOpen.value = true
@@ -28,7 +29,7 @@ const {
 
 const { data, isPending: pending } = useQuery({
   queryKey: ['categories'],
-  queryFn: () => $fetch<Category[]>('/api/categories')
+  queryFn: fetchCategories
 })
 
 const columns: TableColumn<Category>[] = [

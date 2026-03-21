@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/vue-query'
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
-import type { Service, Category } from '~/types'
+import type { Service } from '~/types'
 
 const props = defineProps<{
   service?: Service
@@ -74,20 +74,23 @@ watch(open, (isOpen) => {
   }
 })
 
+const { fetchCategories } = useCategoryTable()
+
 const { data: categories, isPending: loadingCategories } = useQuery({
   queryKey: ['categories'],
-  queryFn: () => $fetch<Category[]>('/api/categories')
+  queryFn: fetchCategories
 })
 
 const toast = useToast()
 const queryClient = useQueryClient()
+const { createService, updateService } = useServiceTable()
 
 const { mutate, isPending: loading } = useMutation({
   mutationFn: (newService: Schema) => {
     if (isEditing.value && props.service?.id) {
-      return $fetch(`/api/services/${props.service.id}`, { method: 'PATCH', body: newService })
+      return updateService(props.service.id, newService)
     }
-    return $fetch('/api/services', { method: 'POST', body: newService })
+    return createService(newService)
   },
   onSuccess: (_, variables) => {
     queryClient.invalidateQueries({ queryKey: ['services'] })

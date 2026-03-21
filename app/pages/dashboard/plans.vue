@@ -21,7 +21,8 @@ const {
   columnFilters,
   rowSelection,
   pagination,
-  search
+  search,
+  fetchPlans
 } = usePlanTable(table, (plan) => {
   selectedPlan.value = plan
   isEditOpen.value = true
@@ -29,7 +30,7 @@ const {
 
 const { data, isPending: pending } = useQuery({
   queryKey: ['plans'],
-  queryFn: () => $fetch<Plan[]>('/api/plans')
+  queryFn: fetchPlans
 })
 
 const columns: TableColumn<Plan>[] = [

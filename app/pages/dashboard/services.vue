@@ -21,7 +21,8 @@ const {
   columnFilters,
   rowSelection,
   pagination,
-  search
+  search,
+  fetchServices
 } = useServiceTable(table, (service) => {
   selectedService.value = service
   isEditOpen.value = true
@@ -29,7 +30,7 @@ const {
 
 const { data, isPending: pending } = useQuery({
   queryKey: ['services'],
-  queryFn: () => $fetch<Service[]>('/api/services')
+  queryFn: fetchServices
 })
 
 const columns: TableColumn<Service>[] = [

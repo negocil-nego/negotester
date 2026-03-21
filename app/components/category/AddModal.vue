@@ -67,16 +67,14 @@ watch(open, (isOpen) => {
 
 const toast = useToast()
 const queryClient = useQueryClient()
+const { createCategory, updateCategory } = useCategoryTable()
 
 const { mutate, isPending: loading } = useMutation({
-  mutationFn: (newCategory: Schema) => {
+  mutationFn: (item: Schema) => {
     if (isEditing.value && props.category?.id) {
-      return $fetch(`/api/categories/${props.category.id}`, {
-        method: 'PATCH',
-        body: newCategory
-      })
+      return updateCategory(props.category.id, item)
     }
-    return $fetch('/api/categories', { method: 'POST', body: newCategory })
+    return createCategory(item)
   },
   onSuccess: (_, variables) => {
     queryClient.invalidateQueries({ queryKey: ['categories'] })

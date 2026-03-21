@@ -61,13 +61,14 @@ watch(open, (isOpen) => {
 
 const toast = useToast()
 const queryClient = useQueryClient()
+const { createPlan, updatePlan } = usePlanTable()
 
 const { mutate, isPending: loading } = useMutation({
-  mutationFn: (newPlan: Schema) => {
+  mutationFn: (item: Schema) => {
     if (isEditing.value && props.plan?.id) {
-      return $fetch(`/api/plans/${props.plan.id}`, { method: 'PATCH', body: newPlan })
+      return updatePlan(props.plan.id, item)
     }
-    return $fetch('/api/plans', { method: 'POST', body: newPlan })
+    return createPlan(item)
   },
   onSuccess: (_, variables) => {
     queryClient.invalidateQueries({ queryKey: ['plans'] })

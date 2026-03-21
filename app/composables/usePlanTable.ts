@@ -2,9 +2,31 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { Row, Table } from "@tanstack/table-core"
 import type { Plan } from "~/types"
 
-export function usePlanTable(table: any, onEdit: (plan: Plan) => void) {
+export function usePlanTable(table?: any, onEdit?: (plan: Plan) => void) {
     const toast = useToast()
     const queryClient = useQueryClient()
+    const supabase = useSupabaseClient()
+
+    async function fetchPlans() {
+        const { data, error } = await supabase.from('tb_plans').select('*')
+        if (error) throw new Error(error.message)
+        if (!data) return [] as Plan[]
+        const plans: Plan[] = data.map((it: any) => ({ ...it, billingCycle: it.billing_cycle }))
+        return plans;
+    }
+
+    async function createPlan(item: any) {
+        const { data, error } = await supabase.from('tb_plans').insert(item).select()
+        if (error) throw new Error(error.message)
+        return data
+    }
+
+    async function updatePlan(id: number, item: any) {
+        const { data, error } = await supabase.from('tb_plans').update(item).eq('id', id).select()
+        if (error) throw new Error(error.message)
+        return data
+    }
+
     const columnVisibility = ref({ id: false })
     const rowSelection = ref({})
     const pagination = ref({ pageIndex: 0, pageSize: 10 })
@@ -13,28 +35,32 @@ export function usePlanTable(table: any, onEdit: (plan: Plan) => void) {
 
     const search = computed({
         get: (): string => {
+            if (!table) return ''
             return (table.value?.tableApi?.getColumn('name')?.getFilterValue() as string) || ''
         },
         set: (value: string) => {
-            table.value?.tableApi?.getColumn('name')?.setFilterValue(value || undefined)
+            if (table) table.value?.tableApi?.getColumn('name')?.setFilterValue(value || undefined)
         }
     })
 
     const deleteMutation = useMutation({
-        mutationFn: (planId: number) => $fetch(`/api/plans/${planId}`, { method: 'DELETE' }),
+        mutationFn: async (planId: number) => {
+            const { error } = await supabase.from('tb_plans').delete().eq('id', planId)
+            if (error) throw new Error(error.message)
+        },
         onSuccess: () => {
-             queryClient.invalidateQueries({ queryKey: ['plans'] })
-             toast.add({
-                 title: 'Plano eliminado',
-                 description: 'O plano foi eliminado com sucesso.'
-             })
+            queryClient.invalidateQueries({ queryKey: ['plans'] })
+            toast.add({
+                title: 'Plano eliminado',
+                description: 'O plano foi eliminado com sucesso.'
+            })
         },
         onError: () => {
-             toast.add({
-                 title: 'Erro ao eliminar plano',
-                 description: 'O plano não pôde ser eliminado.',
-                 color: 'error'
-             })
+            toast.add({
+                title: 'Erro ao eliminar plano',
+                description: 'O plano não pôde ser eliminado.',
+                color: 'error'
+            })
         }
     })
 
@@ -62,7 +88,7 @@ export function usePlanTable(table: any, onEdit: (plan: Plan) => void) {
                 label: 'Editar plano',
                 icon: 'i-lucide-edit',
                 onSelect() {
-                    onEdit(row.original)
+                    if (onEdit) onEdit(row.original)
                 }
             },
             {
@@ -104,6 +130,10 @@ export function usePlanTable(table: any, onEdit: (plan: Plan) => void) {
     }
 
     return {
+        fetchPlans,
+        createPlan,
+        updatePlan,
+
         search,
         getRowItems,
         getHeaderSelect,
