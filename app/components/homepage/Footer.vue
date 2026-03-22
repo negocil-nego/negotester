@@ -59,8 +59,8 @@ const columns: FooterColumn[] = [
                 target: '_self'
             },
             {
-                label: 'Preço',
-                to: '#prices',
+                label: 'Planos',
+                to: '#plans',
                 target: '_self'
             },
             {

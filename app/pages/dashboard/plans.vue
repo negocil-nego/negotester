@@ -75,7 +75,7 @@ const columns: TableColumn<Plan>[] = [
   {
     accessorKey: 'description',
     header: 'Descrição',
-    cell: ({ row }) => row.original.description
+    cell: ({ row }) => h(UTooltip, { text: row.original.description }, () => h(UButton, { variant: 'ghost', color: 'neutral', class: 'font-normal' }, row.original.description!.substring(0, 40) + '...'))
   },
   {
     id: 'actions',
@@ -108,7 +108,8 @@ const columns: TableColumn<Plan>[] = [
         </div>
       </div>
 
-      <PlanAddServiceModal v-if="isAddServiceOpen" v-model:open="isAddServiceOpen" :plan="selectedPlan" @cancel="isAddServiceOpen = false" />
+      <PlanAddServiceModal v-if="isAddServiceOpen" v-model:open="isAddServiceOpen" :plan="selectedPlan"
+        @cancel="isAddServiceOpen = false" />
 
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"
         v-model:row-selection="rowSelection" v-model:pagination="pagination" :pagination-options="{

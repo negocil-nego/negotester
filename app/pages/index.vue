@@ -16,7 +16,7 @@
 
         <section id="prices" class="relative px-6 my-5 md:py-10">
             <HomepagePattern />
-            <HomepagePrice />
+            <HomepagePlan />
         </section>
 
         <!-- Footer -->
