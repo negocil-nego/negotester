@@ -2,7 +2,6 @@
 defineProps<{
     table: any
 }>()
-
 </script>
 
 <template>

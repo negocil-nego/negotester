@@ -3,7 +3,7 @@
         <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between border rounded-full gap-10 md:gap-20">
             <div class="md:ml-3">
                 <div class="flex justify-start relative">
-                    <Logo />
+                    <LogoSite />
                 </div>
             </div>
             <div>

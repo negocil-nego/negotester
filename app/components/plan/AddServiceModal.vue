@@ -72,43 +72,27 @@ const emit = defineEmits(['cancel'])
         description="Gerencie quais serviços estão inclusos neste plano">
         <template #body>
             <UInput v-model="searchQuery" icon="i-lucide-search" placeholder="Pesquisar serviço..." class="mb-4" />
-            <UTabs :items="items" class="w-full"
-                @change="() => { selectedLinkedIds = []; selectedAvailableIds = [] }">
+            <UTabs :items="items" class="w-full" @change="() => { selectedLinkedIds = []; selectedAvailableIds = [] }">
                 <template #content="{ item }">
                     <UCard class="mt-4 min-h-[250px]">
                         <div v-if="loadingServices || loadingAttached" class="flex justify-center items-center h-48">
                             <UIcon name="i-lucide-loader-2" class="animate-spin text-3xl text-primary" />
                         </div>
 
-                        <CoreSelectionList
-                            v-else-if="item.key === 'has'"
-                            v-model:selected-ids="selectedLinkedIds"
-                            :items="hasServices"
-                            empty-text="Nenhum serviço vinculado"
-                            empty-icon="i-lucide-file-x-2"
-                            submit-label="Desvincular Selecionados"
-                            submit-icon="i-lucide-trash"
-                            submit-color="error"
-                            :submitting="submitting"
-                            active-class="border-error/50 bg-error/5"
+                        <CoreSelectionList v-else-if="item.key === 'has'" v-model:selected-ids="selectedLinkedIds"
+                            :items="hasServices" empty-text="Nenhum serviço vinculado" empty-icon="i-lucide-file-x-2"
+                            submit-label="Desvincular Selecionados" submit-icon="i-lucide-trash" submit-color="error"
+                            :submitting="submitting" active-class="border-error/50 bg-error/5"
                             hover-class="border-gray-200 dark:border-gray-800 hover:border-error/30"
-                            @submit="submitUnlink"
-                        />
+                            @submit="submitUnlink" />
 
-                        <CoreSelectionList
-                            v-else-if="item.key === 'not_has'"
-                            v-model:selected-ids="selectedAvailableIds"
-                            :items="notHasServices"
-                            empty-text="Todos os serviços já estão vinculados"
-                            empty-icon="i-lucide-check-circle-2"
-                            submit-label="Vincular Selecionados"
-                            submit-icon="i-lucide-plus"
-                            submit-color="primary"
-                            :submitting="submitting"
-                            active-class="border-primary/50 bg-primary/5"
+                        <CoreSelectionList v-else-if="item.key === 'not_has'"
+                            v-model:selected-ids="selectedAvailableIds" :items="notHasServices"
+                            empty-text="Todos os serviços já estão vinculados" empty-icon="i-lucide-check-circle-2"
+                            submit-label="Vincular Selecionados" submit-icon="i-lucide-plus" submit-color="primary"
+                            :submitting="submitting" active-class="border-primary/50 bg-primary/5"
                             hover-class="border-gray-200 dark:border-gray-800 hover:border-primary/30"
-                            @submit="submitLink"
-                        />
+                            @submit="submitLink" />
                     </UCard>
                 </template>
             </UTabs>

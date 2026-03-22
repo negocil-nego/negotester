@@ -7,7 +7,7 @@ const bodySchema = z.object({
   serviceId: z.number().optional(),
   planIds: z.array(z.number()).optional(),
   serviceIds: z.array(z.number()).optional()
-}).refine(data => {
+}).refine((data) => {
   return (data.planId && data.serviceIds) || (data.serviceId && data.planIds)
 }, "Must provide either planId+serviceIds or serviceId+planIds")
 
@@ -22,14 +22,14 @@ export default defineEventHandler(async (event) => {
     } else if (body.serviceId && body.planIds) {
       body.planIds.forEach(id => rows.push({ plan_id: id, service_id: body.serviceId! }))
     }
-    
+
     if (rows.length === 0) return { success: true }
-    
+
     const { error } = await supabase.from('tb_plan_service').insert(rows)
     if (error) throw createError({ statusCode: 500, statusMessage: error.message })
     return { success: true }
-  } 
-  
+  }
+
   if (body.action === 'unlink') {
     if (body.planId && body.serviceIds && body.serviceIds.length > 0) {
       const { error } = await supabase.from('tb_plan_service').delete()

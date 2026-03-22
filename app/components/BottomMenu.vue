@@ -8,7 +8,6 @@ defineProps<{
 const supabase = useSupabaseClient()
 const toast = useToast()
 
-
 function showToastLogout() {
   toast.add({
     title: 'Sair',
@@ -31,7 +30,6 @@ function showToastLogout() {
     }]
   })
 }
-
 
 const items = computed<DropdownMenuItem[][]>(() => ([
   [{

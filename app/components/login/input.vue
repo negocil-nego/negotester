@@ -7,7 +7,7 @@
 
             <input :value="modelValue" :type="computedType" :placeholder="placeholder"
                 class="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-                @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+                @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)">
 
             <button v-if="type === 'password'" type="button" @click="togglePassword" class="focus:outline-none">
                 <Icon :name="showPassword ? 'lucide:eye' : 'lucide:eye-off'" class="text-base text-muted-foreground" />

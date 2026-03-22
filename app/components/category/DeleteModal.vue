@@ -1,11 +1,9 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   table?: any
 }>()
 
 const open = ref(false)
-
-const count = computed(() => props.table?.tableApi?.getFilteredSelectedRowModel().rows.length)
 
 async function onSubmit() {
   await new Promise(resolve => setTimeout(resolve, 1000))
@@ -16,7 +14,6 @@ async function onSubmit() {
 <template>
   <UModal v-model:open="open" title="Eliminar categoria"
     description="Tem certeza que deseja eliminar as categorias selecionadas?">
-
     <UButton v-if="table?.tableApi?.getFilteredSelectedRowModel().rows.length" label="Eliminar" color="error"
       variant="subtle" icon="i-lucide-trash">
       <template #trailing>

@@ -17,7 +17,6 @@
                 icon="i-heroicons-information-circle" variant="subtle" />
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5 md:mt-10 md:w-full md:justify-between">
-                <!-- Serviços disponíveis -->
                 <div>
                     <h3 class="text-sm font-semibold mb-3 text-gray-700">
                         Selecione os serviços
@@ -33,8 +32,6 @@
                         </UBadge>
                     </div>
                 </div>
-
-                <!-- Serviços selecionados -->
                 <div class="h-full">
                     <div v-if="selectedServices.length > 0" class="space-y-2">
                         <div class="text-sm font-semibold mb-3 text-gray-700">
@@ -92,6 +89,6 @@ const addService = (service: Service) => {
 };
 
 const removeService = (service: Service) => {
-    selectedServices.value = selectedServices.value.filter((s) => s.id !== service.id);
+    selectedServices.value = selectedServices.value.filter((s: any) => s.id !== service.id);
 };
 </script>

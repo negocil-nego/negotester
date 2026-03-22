@@ -20,7 +20,8 @@
     </UDropdownMenu>
 </template>
 <script lang="ts" setup>
-import { upperFirst } from 'scule';;
+import { upperFirst } from 'scule';
+
 defineProps<{ table: any }>()
 
 const label = (column: any) => {

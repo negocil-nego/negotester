@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-
-const props = defineProps<{
+defineProps<{
     items: any[]
     emptyText: string
     emptyIcon: string
@@ -39,7 +37,8 @@ const submit = () => {
         <div class="space-y-2 mb-4 max-h-[40vh] overflow-y-auto pr-1">
             <div v-for="item in items" :key="item.id" @click="toggleSelection(item.id)"
                 :class="['flex items-center gap-3 p-3 border rounded-md cursor-pointer transition-colors', selectedIds.includes(item.id) ? (activeClass || 'border-primary/50 bg-primary/5') : (hoverClass || 'border-gray-200 dark:border-gray-800 hover:border-primary/30')]">
-                <UCheckbox :model-value="selectedIds.includes(item.id)" :color="submitColor || 'primary'" class="pointer-events-none" />
+                <UCheckbox :model-value="selectedIds.includes(item.id)" :color="submitColor || 'primary'"
+                    class="pointer-events-none" />
                 <div class="flex flex-col">
                     <span class="font-medium flex items-center gap-2">
                         <Icon v-if="item.icon" :name="item.icon" class="w-4 h-4" />
@@ -50,7 +49,9 @@ const submit = () => {
             </div>
         </div>
         <div class="flex justify-end mt-auto pt-2 border-t border-gray-100 dark:border-gray-800">
-            <UButton :icon="submitIcon" :label="submitLabel" :color="submitColor || 'primary'" :variant="submitColor === 'error' ? 'ghost' : 'solid'" :disabled="selectedIds.length === 0" :loading="submitting" @click="submit" />
+            <UButton :icon="submitIcon" :label="submitLabel" :color="submitColor || 'primary'"
+                :variant="submitColor === 'error' ? 'ghost' : 'solid'" :disabled="selectedIds.length === 0"
+                :loading="submitting" @click="submit" />
         </div>
     </div>
 </template>

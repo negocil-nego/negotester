@@ -9,14 +9,14 @@ const props = defineProps<{
 }>()
 
 const { data: plans, isPending: loadingPlans } = useQuery({
-  queryKey: ['plans'],
-  queryFn: () => $fetch<Plan[]>('/api/plans')
+    queryKey: ['plans'],
+    queryFn: () => $fetch<Plan[]>('/api/plans')
 })
 
 const { data: attachedPlanIds, isPending: loadingAttached } = useQuery({
-  queryKey: ['service-plans', computed(() => props.service?.id)],
-  queryFn: () => $fetch<number[]>(`/api/services/${props.service?.id}/plans`),
-  enabled: computed(() => !!props.service?.id)
+    queryKey: ['service-plans', computed(() => props.service?.id)],
+    queryFn: () => $fetch<number[]>(`/api/services/${props.service?.id}/plans`),
+    enabled: computed(() => !!props.service?.id)
 })
 
 const searchQuery = ref('')
@@ -67,7 +67,8 @@ const emit = defineEmits(['cancel'])
 </script>
 
 <template>
-    <UModal v-model:open="open" :title="`Planos do Serviço: ${service?.name || ''}`" description="Gerencie quais planos contêm este serviço">
+    <UModal v-model:open="open" :title="`Planos do Serviço: ${service?.name || ''}`"
+        description="Gerencie quais planos contêm este serviço">
         <template #body>
             <UInput v-model="searchQuery" icon="i-lucide-search" placeholder="Pesquisar plano..." class="mb-4" />
             <UTabs :items="items" class="w-full" @change="() => { selectedLinkedIds = []; selectedAvailableIds = [] }">
@@ -76,41 +77,23 @@ const emit = defineEmits(['cancel'])
                         <div v-if="loadingPlans || loadingAttached" class="flex justify-center items-center h-48">
                             <UIcon name="i-lucide-loader-2" class="animate-spin text-3xl text-primary" />
                         </div>
-                        
-                        <CoreSelectionList
-                            v-else-if="item.key === 'has'"
-                            v-model:selected-ids="selectedLinkedIds"
-                            :items="hasPlans"
-                            empty-text="Nenhum plano vinculado"
-                            empty-icon="i-lucide-file-x-2"
-                            submit-label="Desvincular Selecionados"
-                            submit-icon="i-lucide-trash"
-                            submit-color="error"
-                            :submitting="submitting"
-                            active-class="border-error/50 bg-error/5"
+                        <CoreSelectionList v-else-if="item.key === 'has'" v-model:selected-ids="selectedLinkedIds"
+                            :items="hasPlans" empty-text="Nenhum plano vinculado" empty-icon="i-lucide-file-x-2"
+                            submit-label="Desvincular Selecionados" submit-icon="i-lucide-trash" submit-color="error"
+                            :submitting="submitting" active-class="border-error/50 bg-error/5"
                             hover-class="border-gray-200 dark:border-gray-800 hover:border-error/30"
-                            @submit="submitUnlink"
-                        />
-                        
-                        <CoreSelectionList
-                            v-else-if="item.key === 'not_has'"
-                            v-model:selected-ids="selectedAvailableIds"
-                            :items="notHasPlans"
-                            empty-text="Todos os planos já estão vinculados"
-                            empty-icon="i-lucide-check-circle-2"
-                            submit-label="Vincular Selecionados"
-                            submit-icon="i-lucide-plus"
-                            submit-color="primary"
-                            :submitting="submitting"
-                            active-class="border-primary/50 bg-primary/5"
+                            @submit="submitUnlink" />
+                        <CoreSelectionList v-else-if="item.key === 'not_has'"
+                            v-model:selected-ids="selectedAvailableIds" :items="notHasPlans"
+                            empty-text="Todos os planos já estão vinculados" empty-icon="i-lucide-check-circle-2"
+                            submit-label="Vincular Selecionados" submit-icon="i-lucide-plus" submit-color="primary"
+                            :submitting="submitting" active-class="border-primary/50 bg-primary/5"
                             hover-class="border-gray-200 dark:border-gray-800 hover:border-primary/30"
-                            @submit="submitLink"
-                        />
+                            @submit="submitLink" />
                     </UCard>
                 </template>
             </UTabs>
         </template>
-        
         <div class="flex justify-end gap-2 pt-2">
             <UButton label="Fechar" color="neutral" variant="subtle" @click="emit('cancel')" />
         </div>
