@@ -2,15 +2,16 @@
     <div>
         <label v-if="label" class="mb-1.5 block text-sm font-medium">{{ label }}</label>
         <div
-            class="flex items-center gap-2 rounded-lg border border-input bg-card px-3 py-2.5 focus-within:ring-2 focus-within:ring-ring">
-            <Icon v-if="icon" :name="icon" class="text-base text-muted-foreground" />
+            class="flex items-center gap-2 rounded-full border border-input bg-card px-3 py-2.5 focus-within:ring-2 focus-within:ring-ring">
+            <Icon v-if="icon" :name="icon" class="text-base text-muted-foreground md:min-w-3 md:min-h-3" />
 
             <input :value="modelValue" :type="computedType" :placeholder="placeholder"
-                class="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                class="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground md:py-2"
                 @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)">
 
             <button v-if="type === 'password'" type="button" @click="togglePassword" class="focus:outline-none">
-                <Icon :name="showPassword ? 'lucide:eye' : 'lucide:eye-off'" class="text-base text-muted-foreground" />
+                <Icon :name="showPassword ? 'lucide:eye' : 'lucide:eye-off'"
+                    class="text-base text-muted-foreground md:min-w-3 md:min-h-3" />
             </button>
         </div>
 

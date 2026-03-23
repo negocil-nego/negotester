@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/vue-query'
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
-import type { Service, Category } from '~/types'
+import type { Service, Category, ServiceType } from '~/types'
 
 const props = defineProps<{
   service?: Service
@@ -24,7 +24,8 @@ const schema = z.object({
   price: z.number().min(0, 'O preço não pode ser negativo'),
   description: z.string().min(2, 'Descrição muito curta'),
   icon: z.string().min(2, 'Icone muito curto').optional(),
-  category: z.any().refine(val => val && val.id, 'Categoria é obrigatória')
+  category: z.any().refine(val => val && val.id, 'Categoria é obrigatória'),
+  type: z.enum(['FREE', 'FIXED', 'CUSTOMIZE'] as ServiceType[])
 })
 
 type Schema = z.output<typeof schema>
@@ -130,6 +131,10 @@ const onCancel = () => {
               <CoreInputIcon v-model="state.icon" />
             </UFormField>
           </div>
+
+          <UFormField label="Tipo de Serviço" name="type" required>
+            <CoreSelectServiceType v-model="state.type" />
+          </UFormField>
 
           <UFormField label="Descrição" name="description" required>
             <UTextarea v-model="state.description" :rows="3" placeholder="Descrição do serviço" class="w-full" />

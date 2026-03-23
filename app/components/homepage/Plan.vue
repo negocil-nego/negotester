@@ -5,7 +5,7 @@ const { data: plans, pending, error } = await useFetch<PricingPlanProps[]>('/api
 </script>
 
 <template>
-    <div class="py-12" id="plans">
+    <div class="py-12 md:px-10 lg:max-w-10/12 m-auto" id="plans">
         <div class="flex flex-col justify-center items-center gap-2 mb-5 md:mb-10">
             <div class="font-display text-xl md:text-2xl lg:text-4xl font-bold leading-tight tracking-tight mb-6">
                 <span>Escolha o plano ideal </span>

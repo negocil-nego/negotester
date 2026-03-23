@@ -1,21 +1,17 @@
 <template>
   <NuxtLayout name="auth" @social-login="handleSocialLogin">
-    <!-- Header -->
     <template #header>
-      <h1 class="mb-2 text-3xl font-bold text-foreground">Bem-vindo!</h1>
-      <p class="mb-8 text-muted-foreground">
+      <h1 class="mb-2 text-3xl font-bold text-foreground md:text-5xl lg:text-7xl">Bem-vindo!</h1>
+      <p class="mb-8 text-muted-foreground md:text-lg lg:mt-10 lg:text-xl">
         Faça o processo de autenticação para ter acesso à plataforma
       </p>
     </template>
 
-    <!-- Form -->
     <template #form>
-      <form class="space-y-5" @submit.prevent="handleSubmit">
-        <!-- Email Input -->
+      <form class="space-y-5 md:space-y-8 md:my-10" @submit.prevent="handleSubmit">
         <LoginInput v-model="form.email" type="email" label="Email" icon="lucide:mail"
           placeholder="Digita o seu email" />
 
-        <!-- Password Input -->
         <LoginInput v-model="form.password" type="password" label="Senha" icon="lucide:lock"
           placeholder="Digita a sua senha">
           <template #helper>
@@ -27,14 +23,12 @@
           </template>
         </LoginInput>
 
-        <!-- Submit Button -->
-        <UButton type="submit" variant="solid" size="xl" class="w-full flex justify-center">
+        <UButton type="submit" variant="solid" size="xl" class="w-full flex justify-center rounded-full p-3">
           Entrar
         </UButton>
       </form>
     </template>
 
-    <!-- Footer -->
     <template #footer>
       <p class="mt-8 text-center text-sm text-muted-foreground">
         Não tem conta?
@@ -44,14 +38,17 @@
       </p>
     </template>
 
-    <!-- Hero Section (Optional) -->
     <template #hero>
-      <!-- Adicione conteúdo do hero aqui se necessário -->
+      <div class="z-10 p-0">
+        <HomepageBackgroundVideo :video="VideoList.LOGIN" />
+      </div>
     </template>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
+import { VideoList } from '~/shared/videos'
+
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 

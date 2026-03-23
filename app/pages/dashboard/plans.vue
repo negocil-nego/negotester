@@ -6,6 +6,7 @@ import type { Plan } from '~/types'
 
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
+const UTooltip = resolveComponent('UTooltip')
 const UButton = resolveComponent('UButton')
 const UBadge = resolveComponent('UBadge')
 const table = useTemplateRef('table')
@@ -108,7 +109,7 @@ const columns: TableColumn<Plan>[] = [
         </div>
       </div>
 
-      <PlanAddServiceModal v-if="isAddServiceOpen" v-model:open="isAddServiceOpen" :plan="selectedPlan"
+      <PlanAddModal v-if="isAddServiceOpen" v-model:open="isAddServiceOpen" :plan="selectedPlan"
         @cancel="isAddServiceOpen = false" />
 
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"

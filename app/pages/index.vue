@@ -1,7 +1,10 @@
+<script setup lang="ts">
+import { VideoList } from '~/shared/videos';
+</script>
+
 <template>
     <main>
-        <HomepageBackgroundVideo
-            video="https://nulpvyicfuecpcugpjun.supabase.co/storage/v1/object/public/site/1107914_1080p_4k_3840x2160.mp4" />
+        <HomepageBackgroundVideo :video="VideoList.HOME" />
 
         <div class="absolute top-0 justify-center items-center w-full h-screen">
             <HomepageNav />
@@ -10,12 +13,15 @@
             </div>
         </div>
 
-        <section id="services" class="bg-hero-foreground px-6 text-hero-foreground mx-auto my-5 md:my-10 lg:my-50">
+        <section id="services" class="bg-hero-foreground px-6 text-hero-foreground mx-auto my-5 md:my-10 lg:my-30">
             <HomepageCategory />
         </section>
 
+        <section id="how-it-works" class="py-24 bg-surface-container-lowest border-y border-white/5">
+            <HomepageHowItWorks />
+        </section>
+
         <section id="prices" class="relative px-6 my-5 md:py-10">
-            <HomepagePattern />
             <HomepagePlan />
         </section>
 

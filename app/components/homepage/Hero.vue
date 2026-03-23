@@ -3,13 +3,12 @@
         <div class="flex items-center justify-center flex-col">
             <div
                 class="font-display text-center md:text-left text-3xl md:text-5xl font-bold leading-tight tracking-tight mb-6">
-                <span>Software com </span>
-                <span class="text-primary">qualidade </span>
-                <span>garantida</span>
+                <span>Qualidade sob o</span>
+                <span class="text-primary">olhar humano</span>
             </div>
             <p class="text-hero-muted text-md md:text-lg max-w-xl mb-6 leading-relaxed text-center">
-                Serviços especializados em QA, consultoria, documentação técnica e contratação de equipas de
-                desenvolvimento à medida do seu projeto.
+                Sua equipe de especialistas para testes manuais e exploratórios. Validamos cada clique, formulário e
+                fluxo do seu projeto para garantir a melhor experiência para seus usuários.
             </p>
             <div class="flex flex-col md:flex-row gap-2 md:gap-4 lg:my-10">
                 <UButton color="primary" variant="solid" class="p-4 lg:p-4 rounded-full">
