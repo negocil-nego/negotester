@@ -60,7 +60,7 @@ export interface Category {
 }
 
 export type ServiceType = 'FREE' | 'FIXED' | 'CUSTOMIZE'
-export type ServiceV = 'GENERAL' | 'SPECIFIC'
+export type ServiceArea = 'GENERAL' | 'PROPOSAL'
 
 export interface Service {
   id: number
@@ -69,6 +69,7 @@ export interface Service {
   icon?: string
   price: number
   type: ServiceType
+  area: ServiceArea
   category: Category
 }
 
