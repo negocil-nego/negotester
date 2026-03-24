@@ -1,6 +1,7 @@
 <!-- eslint-disable @stylistic/spaced-comment -->
 <script setup lang="ts">
-//const colorMode = useColorMode()
+const colorMode = useColorMode()
+colorMode.preference = 'dark'
 //const color = computed(() => colorMode.value === 'dark' ? '#1b1718' : 'white')
 
 useHead({

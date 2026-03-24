@@ -39,8 +39,40 @@
     </template>
 
     <template #hero>
-      <div class="z-10 p-0">
+      <div class="relative z-10 w-full h-full">
         <HomepageBackgroundVideo :video="VideoList.LOGIN" />
+        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 px-8 pointer-events-none">
+          <div
+            class="pointer-events-auto w-full max-w-xs self-end mr-4 bg-[#1a1a1a]/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-2xl">
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/20">
+                <UIcon name="lucide:shield-check" class="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-white">Auditoria Manual</p>
+                <p class="mt-1 text-xs text-white/50 leading-relaxed">
+                  Cada linha de código é revisada por especialistas sob demanda.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="pointer-events-auto w-full max-w-xs self-start ml-4 bg-[#1a1a1a]/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-2xl">
+            <p class="mb-2 text-xs font-medium uppercase tracking-widest text-white/40">Linha de status</p>
+            <div class="mb-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
+              <div class="h-full w-[88%] rounded-full bg-primary transition-all duration-1000" />
+            </div>
+            <p class="text-sm font-semibold text-white">88.4% Precisão Média</p>
+          </div>
+          <div class="pointer-events-auto w-full max-w-xs border-l-2 border-primary pl-4 self-end mr-4">
+            <p class="text-sm italic text-white/80 leading-relaxed">
+              "A excelência não é um ato, mas um hábito. Transformamos o caos digital em clareza editorial."
+            </p>
+            <p class="mt-2 text-[10px] font-semibold uppercase tracking-widest text-primary">
+              The QualityPulse Methodology
+            </p>
+          </div>
+        </div>
       </div>
     </template>
   </NuxtLayout>

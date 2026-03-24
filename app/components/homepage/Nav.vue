@@ -10,16 +10,16 @@
             <div>
                 <ul class="gap-2 md:gap-5 hidden md:flex">
                     <li>
-                        <ULink to="#" class="rounded-full"> Início </ULink>
+                        <ULink to="#" class="rounded-full dark:text-white"> Início </ULink>
                     </li>
                     <li>
-                        <ULink to="#services" class="rounded-full"> Serviços </ULink>
+                        <ULink to="#services" class="rounded-full dark:text-white"> Serviços </ULink>
                     </li>
                     <li>
-                        <ULink to="#prices" class="rounded-full"> Planos </ULink>
+                        <ULink to="#prices" class="rounded-full dark:text-white"> Planos </ULink>
                     </li>
                     <li>
-                        <ULink to="#about" class="rounded-full">Sobre</ULink>
+                        <ULink to="#about" class="rounded-full dark:text-white">Sobre</ULink>
                     </li>
                 </ul>
             </div>
