@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import type { PricingPlanProps } from '@nuxt/ui'
 
+defineProps<{
+    modelValue?: string
+}>()
+
+const emit = defineEmits(['update:modelValue'])
+
 const { data: plans, pending, error } = await useFetch<PricingPlanProps[]>('/api/plan-services')
 </script>
 
 <template>
-    <div class="py-12 md:px-10 lg:max-w-10/12 m-auto" id="plans">
+    <div class="py-12 md:px-10  m-auto" id="plans">
         <div class="flex flex-col justify-center items-center gap-2 mb-5 md:mb-10">
             <div class="font-display text-xl md:text-2xl lg:text-4xl font-bold leading-tight tracking-tight mb-6">
                 <span>Escolha o plano ideal </span>
@@ -28,6 +34,7 @@ const { data: plans, pending, error } = await useFetch<PricingPlanProps[]>('/api
             <p>Nenhum plano encontrado.</p>
         </div>
 
-        <UPricingPlans v-else :plans="plans" />
+        <UPricingPlans v-else :plans="plans" :model-value="modelValue"
+            @update:model-value="emit('update:modelValue', $event)" />
     </div>
 </template>

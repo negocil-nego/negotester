@@ -95,7 +95,7 @@ const columns: TableColumn<Plan>[] = [
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <PlanAddModal v-model:open="isEditOpen" :plan="selectedPlan" />
+          <PlanFormModal v-model:open="isEditOpen" :plan="selectedPlan" />
         </template>
       </UDashboardNavbar>
     </template>
@@ -109,7 +109,7 @@ const columns: TableColumn<Plan>[] = [
         </div>
       </div>
 
-      <PlanAddModal v-if="isAddServiceOpen" v-model:open="isAddServiceOpen" :plan="selectedPlan"
+      <PlanFormModal v-if="isAddServiceOpen" v-model:open="isAddServiceOpen" :plan="selectedPlan"
         @cancel="isAddServiceOpen = false" />
 
       <UTable ref="table" v-model:column-filters="columnFilters" v-model:column-visibility="columnVisibility"

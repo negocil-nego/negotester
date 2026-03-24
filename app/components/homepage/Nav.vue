@@ -7,9 +7,9 @@
                     <LogoSite />
                 </div>
             </div>
-            <section v-if="isMobile">
+            <section v-if="isMobileOrTablet">
                 <UDropdownMenu arrow :items="items" :ui="{
-                    content: 'w-max bg-slate-900/95'
+                    content: 'w-max'
                 }">
                     <UButton icon="i-lucide-menu" color="neutral" variant="ghost" />
                 </UDropdownMenu>
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
 
-const { isMobile } = useDevice()
+const { isMobileOrTablet } = useDevice()
 
 const items = ref<DropdownMenuItem[]>([
     {

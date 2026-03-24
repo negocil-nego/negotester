@@ -11,9 +11,7 @@
                 fluxo do seu projeto para garantir a melhor experiência para seus usuários.
             </p>
             <div class="flex flex-col md:flex-row gap-2 md:gap-4 lg:my-10">
-                <UButton color="primary" variant="solid" class="p-4 lg:p-4 rounded-full justify-center items-center">
-                    Quero solicitar um orçamento
-                </UButton>
+                <HomepageProposalRequest />
                 <UButton color="primary" variant="outline"
                     class="p-4 lg:p-4 rounded-full md:px-20 justify-center items-center">
                     Começar de graça
