@@ -17,7 +17,7 @@
                         <span class="text-primary-container font-headline font-black text-2xl">{{ step.id }}</span>
                     </div>
                     <div v-if="idx < steps.length - 1"
-                        class="hidden lg:block absolute top-1/2 left-full w-full h-[1px] bg-gradient-to-r from-primary-container/30 to-transparent -translate-y-1/2 z-0" />
+                        class="hidden lg:block absolute top-1/2 left-full w-full h-px bg-linear-to-r from-primary-container/30 to-transparent -translate-y-1/2 z-0" />
                 </div>
                 <h3 class="text-xl font-headline font-bold mb-3">{{ step.title }}</h3>
                 <p class="text-on-surface-variant text-sm leading-relaxed">{{ step.desc }}</p>

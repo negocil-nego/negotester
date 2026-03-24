@@ -17,7 +17,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-5">
                     <button v-for="provider in socialProviders" :key="provider.name" type="button"
-                        class="flex w-full items-center justify-center gap-2 rounded-lg border border-input bg-card py-2.5 text-sm font-medium transition hover:bg-muted"
+                        class="flex w-full items-center justify-center gap-2 rounded-full border border-input bg-card py-2.5 text-sm font-medium transition hover:bg-muted"
                         @click="$emit('social-login', provider.name)">
                         <Icon :name="provider.icon" class="text-base" />
                         {{ provider.label }}

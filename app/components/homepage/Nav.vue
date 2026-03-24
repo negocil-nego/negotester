@@ -7,32 +7,73 @@
                     <LogoSite />
                 </div>
             </div>
-            <div>
-                <ul class="gap-2 md:gap-5 hidden md:flex">
-                    <li>
-                        <ULink to="#" class="rounded-full dark:text-white"> Início </ULink>
-                    </li>
-                    <li>
-                        <ULink to="#services" class="rounded-full dark:text-white"> Serviços </ULink>
-                    </li>
-                    <li>
-                        <ULink to="#prices" class="rounded-full dark:text-white"> Planos </ULink>
-                    </li>
-                    <li>
-                        <ULink to="#about" class="rounded-full dark:text-white">Sobre</ULink>
-                    </li>
-                </ul>
-            </div>
-            <div class="md:mr-3 hidden md:block">
-                <div class="flex gap-2 md:gap-5">
-                    <UButton href="/login" class="rounded-full px-5" variant="outline">
-                        Entra
-                    </UButton>
-                    <UButton href="/register" class="rounded-full px-5" variant="outline">
-                        Registrar
-                    </UButton>
+            <section v-if="isMobile">
+                <UDropdownMenu arrow :items="items" :ui="{
+                    content: 'w-max bg-slate-900/95'
+                }">
+                    <UButton icon="i-lucide-menu" color="neutral" variant="ghost" />
+                </UDropdownMenu>
+            </section>
+            <section v-else class="flex items-center gap-10">
+                <div>
+                    <ul class="gap-2 md:gap-5 hidden md:flex">
+                        <li v-for="item in items" :key="item.label">
+                            <ULink :to="item.to" class="rounded-full dark:text-white"> {{ item.label }} </ULink>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+                <div class="md:mr-3 hidden md:block">
+                    <div class="flex gap-2 md:gap-5">
+                        <UButton href="/login" class="rounded-full px-5" variant="outline">
+                            Entra
+                        </UButton>
+                        <UButton href="/register" class="rounded-full px-5" variant="outline">
+                            Registrar
+                        </UButton>
+                    </div>
+                </div>
+            </section>
         </div>
     </header>
 </template>
+<script setup lang="ts">
+import type { DropdownMenuItem } from '@nuxt/ui'
+
+const { isMobile } = useDevice()
+
+const items = ref<DropdownMenuItem[]>([
+    {
+        label: 'Início',
+        icon: 'i-lucide-home',
+        to: '#'
+    },
+    {
+        label: 'Serviços',
+        icon: 'i-lucide-list',
+        to: '#services'
+    },
+    {
+        label: 'Planos',
+        icon: 'i-lucide-credit-card',
+        to: '#plans'
+    },
+    {
+        label: 'Sobre',
+        icon: 'i-lucide-info',
+        to: '#about'
+    },
+    {
+        type: 'separator' as const
+    },
+    {
+        label: 'Login',
+        icon: 'i-lucide-user',
+        to: '/login'
+    },
+    {
+        label: 'Registrar',
+        icon: 'i-lucide-user-plus',
+        to: '/register'
+    }
+])
+</script>
