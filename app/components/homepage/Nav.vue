@@ -1,5 +1,5 @@
 <template>
-    <header class="fixed top-0 left-0 flex w-full p-5 items-center bg-transparent">
+    <header class="fixed top-0 left-0 flex w-full p-5 items-center bg-transparent backdrop-blur-md z-50">
         <div
             class="w-full md:max-w-6xl mx-auto px-6 h-16 flex items-center justify-between border rounded-full gap-10 md:gap-20">
             <div class="md:ml-3">

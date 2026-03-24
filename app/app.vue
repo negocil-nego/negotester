@@ -14,7 +14,8 @@ useHead({
     { rel: 'icon', href: '/favicon.ico' }
   ],
   htmlAttrs: {
-    lang: 'en'
+    lang: 'en',
+    class: colorMode.value === 'dark' ? 'dark' : 'light'
   }
 })
 
