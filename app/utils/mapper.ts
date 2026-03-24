@@ -15,8 +15,9 @@ export function toMapService(row: any): Service {
     return {
         id: row.id ?? 0,
         name: row.name ?? '',
-        price: row.price ?? 0,
         icon: row.icon ?? '',
+        price: row.price ?? 0,
+        type: row.type ?? 'FREE',
         description: row.description ?? '',
         category: toMapCategory(row.tb_categories)
     };

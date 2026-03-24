@@ -7,6 +7,7 @@ export interface User {
   id: string
   name: string
   email: string
+  phone?: string
   image?: string
   address: string
 }
@@ -59,6 +60,7 @@ export interface Category {
 }
 
 export type ServiceType = 'FREE' | 'FIXED' | 'CUSTOMIZE'
+export type ServiceV = 'GENERAL' | 'SPECIFIC'
 
 export interface Service {
   id: number
@@ -70,7 +72,7 @@ export interface Service {
   category: Category
 }
 
-export type Period = 'daily' | 'weekly' | 'monthly'
+export type Period = 'DAILY' | 'WEEKLY' | 'MONTHLY'
 
 export interface Range {
   start: Date
@@ -85,4 +87,14 @@ export interface Plan {
   description?: string
   price: number
   billingCycle: BillingCycle
+}
+
+export type ProposalRequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
+
+export interface ProposalRequest {
+  id: number
+  plan: Plan
+  phone: string
+  email: string
+  status: ProposalRequestStatus
 }
