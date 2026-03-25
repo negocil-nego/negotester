@@ -28,18 +28,18 @@ export function usePlanTable(table: any, onEdit: (plan: Plan, sectionType: PlanS
     const deleteMutation = useMutation({
         mutationFn: (planId: number) => $fetch(`/api/plans/${planId}`, { method: 'DELETE' }),
         onSuccess: () => {
-             queryClient.invalidateQueries({ queryKey: ['plans'] })
-             toast.add({
-                 title: 'Plano eliminado',
-                 description: 'O plano foi eliminado com sucesso.'
-             })
+            queryClient.invalidateQueries({ queryKey: ['plans'] })
+            toast.add({
+                title: 'Plano eliminado',
+                description: 'O plano foi eliminado com sucesso.'
+            })
         },
         onError: () => {
-             toast.add({
-                 title: 'Erro ao eliminar plano',
-                 description: 'O plano não pôde ser eliminado.',
-                 color: 'error'
-             })
+            toast.add({
+                title: 'Erro ao eliminar plano',
+                description: 'O plano não pôde ser eliminado.',
+                color: 'error'
+            })
         }
     })
 
@@ -53,7 +53,7 @@ export function usePlanTable(table: any, onEdit: (plan: Plan, sectionType: PlanS
                 label: 'Copiar o ID',
                 icon: 'i-lucide-copy',
                 onSelect() {
-                    navigator.clipboard.writeText(row.original.id.toString())
+                    navigator.clipboard.writeText(row.original.uuid.toString())
                     toast.add({
                         title: 'ID copiado',
                         description: 'O ID do plano foi copiado'
@@ -88,7 +88,7 @@ export function usePlanTable(table: any, onEdit: (plan: Plan, sectionType: PlanS
                 icon: 'i-lucide-trash',
                 color: 'error',
                 onSelect: () => {
-                    deleteMutation.mutate(row.original.id)
+                    deleteMutation.mutate(row.original.uuid)
                 }
             }
         ]

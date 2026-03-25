@@ -53,7 +53,7 @@ export function useServiceTable(table: any, onEdit: (service: Service, sectionTy
                 label: 'Copiar o ID',
                 icon: 'i-lucide-copy',
                 onSelect() {
-                    navigator.clipboard.writeText(row.original.id.toString())
+                    navigator.clipboard.writeText(row.original.uuid.toString())
                     toast.add({
                         title: 'ID copiado',
                         description: 'O ID do serviço foi copiado'
@@ -82,7 +82,7 @@ export function useServiceTable(table: any, onEdit: (service: Service, sectionTy
                 icon: 'i-lucide-trash',
                 color: 'error',
                 onSelect: () => {
-                    deleteMutation.mutate(row.original.id)
+                    deleteMutation.mutate(row.original.uuid)
                 }
             }
         ]

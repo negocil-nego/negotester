@@ -16,7 +16,7 @@ export default eventHandler(async (event) => {
         icon: body.icon,
         price: body.price,
         description: body.description,
-        category_id: body.category.id,
+        category_id: body.category.uuid,
     } as never).eq('id', id);
 
     if (error) {

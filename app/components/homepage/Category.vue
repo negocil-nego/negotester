@@ -15,7 +15,7 @@
             </div>
 
             <div v-if="data?.length" class="cards-grid">
-                <div v-for="category in data" :key="category.id" class="card-item relative bg-[#161818] border border-[#242626] rounded-2xl p-7
+                <div v-for="category in data" :key="category.uuid" class="card-item relative bg-[#161818] border border-[#242626] rounded-2xl p-7
                  flex flex-col gap-4 overflow-hidden hover:border-[#2e3030] transition-colors">
                     <div
                         class="w-10 h-10 rounded-xl bg-[#1e2e22] border border-[#2a4030] flex items-center justify-center shrink-0">

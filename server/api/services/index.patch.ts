@@ -10,8 +10,8 @@ export default eventHandler(async (event) => {
         type: body.type,
         price: body.price,
         description: body.description,
-        category_id: body.category.id,
-    } as never).eq('id', body.id)
+        category_id: body.category.uuid,
+    } as never).eq('id', body.uuid)
     if (error) throw createError({ statusMessage: error.message })
     return data
 })

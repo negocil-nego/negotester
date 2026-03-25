@@ -14,22 +14,22 @@ const { data: plans, isPending: loadingPlans } = useQuery({
 })
 
 const { data: attachedPlanIds, isPending: loadingAttached } = useQuery({
-    queryKey: ['service-plans', computed(() => props.service?.id)],
-    queryFn: () => $fetch<number[]>(`/api/services/${props.service?.id}/plans`),
-    enabled: computed(() => !!props.service?.id)
+    queryKey: ['service-plans', computed(() => props.service?.uuid)],
+    queryFn: () => $fetch<number[]>(`/api/services/${props.service?.uuid}/plans`),
+    enabled: computed(() => !!props.service?.uuid)
 })
 
 const searchQuery = ref('')
 
 const hasPlans = computed(() => {
     if (!plans.value || !attachedPlanIds.value) return []
-    return plans.value.filter(p => attachedPlanIds.value.includes(p.id) && p.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    return plans.value.filter(p => attachedPlanIds.value.includes(p.uuid) && p.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
 })
 
 const notHasPlans = computed(() => {
     if (!plans.value) return []
     let list = plans.value
-    if (attachedPlanIds.value) list = list.filter(p => !attachedPlanIds.value.includes(p.id))
+    if (attachedPlanIds.value) list = list.filter(p => !attachedPlanIds.value.includes(p.uuid))
     return list.filter(p => p.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
 })
 
@@ -53,13 +53,13 @@ const { bulkMutate, isPending: submitting } = usePlanServiceBulk()
 
 const submitLink = async () => {
     if (selectedAvailableIds.value.length === 0 || !props.service) return
-    await bulkMutate({ action: 'link', serviceId: props.service.id, planIds: selectedAvailableIds.value })
+    await bulkMutate({ action: 'link', serviceId: props.service.uuid, planIds: selectedAvailableIds.value })
     selectedAvailableIds.value = []
 }
 
 const submitUnlink = async () => {
     if (selectedLinkedIds.value.length === 0 || !props.service) return
-    await bulkMutate({ action: 'unlink', serviceId: props.service.id, planIds: selectedLinkedIds.value })
+    await bulkMutate({ action: 'unlink', serviceId: props.service.uuid, planIds: selectedLinkedIds.value })
     selectedLinkedIds.value = []
 }
 

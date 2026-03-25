@@ -23,18 +23,18 @@ export function useCategoryTable(table: any, onEdit: (category: Category) => voi
     const deleteMutation = useMutation({
         mutationFn: (categoryId: number) => $fetch(`/api/categories/${categoryId}`, { method: 'DELETE' }),
         onSuccess: () => {
-             queryClient.invalidateQueries({ queryKey: ['categories'] })
-             toast.add({
-                 title: 'Categoria eliminada',
-                 description: 'A categoria foi eliminada com sucesso.'
-             })
+            queryClient.invalidateQueries({ queryKey: ['categories'] })
+            toast.add({
+                title: 'Categoria eliminada',
+                description: 'A categoria foi eliminada com sucesso.'
+            })
         },
         onError: () => {
-             toast.add({
-                 title: 'Erro ao eliminar categoria',
-                 description: 'A categoria não pôde ser eliminada.',
-                 color: 'error'
-             })
+            toast.add({
+                title: 'Erro ao eliminar categoria',
+                description: 'A categoria não pôde ser eliminada.',
+                color: 'error'
+            })
         }
     })
 
@@ -48,7 +48,7 @@ export function useCategoryTable(table: any, onEdit: (category: Category) => voi
                 label: 'Copiar o ID',
                 icon: 'i-lucide-copy',
                 onSelect() {
-                    navigator.clipboard.writeText(row.original.id.toString())
+                    navigator.clipboard.writeText(row.original.uuid.toString())
                     toast.add({
                         title: 'ID copiado',
                         description: 'O ID da categoria foi copiado'
@@ -73,7 +73,7 @@ export function useCategoryTable(table: any, onEdit: (category: Category) => voi
                 icon: 'i-lucide-trash',
                 color: 'error',
                 onSelect: () => {
-                    deleteMutation.mutate(row.original.id)
+                    deleteMutation.mutate(row.original.uuid)
                 }
             }
         ]

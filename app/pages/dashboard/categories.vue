@@ -38,10 +38,6 @@ const columns: TableColumn<Category>[] = [
     cell: ({ row }) => h(UCheckbox, getCellSelect(row))
   },
   {
-    accessorKey: 'id',
-    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'id'))
-  },
-  {
     accessorKey: 'name',
     header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Nome'))
   },

@@ -70,8 +70,8 @@ const queryClient = useQueryClient()
 
 const { mutate, isPending: loading } = useMutation({
   mutationFn: (newCategory: Schema) => {
-    if (isEditing.value && props.category?.id) {
-      return $fetch(`/api/categories/${props.category.id}`, {
+    if (isEditing.value && props.category?.uuid) {
+      return $fetch(`/api/categories/${props.category.uuid}`, {
         method: 'PATCH',
         body: newCategory
       })

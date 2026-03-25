@@ -9,7 +9,7 @@ export default eventHandler(async (event) => {
         price: body.price,
         description: body.description,
         billing_cycle: body.billingCycle,
-    } as never).eq('id', body.id)
+    } as never).eq('id', body.uuid)
     if (error) throw createError({ statusMessage: error.message })
     return data
 })

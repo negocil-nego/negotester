@@ -3,15 +3,6 @@ import type { AvatarProps } from '@nuxt/ui'
 export type UserStatus = 'subscribed' | 'unsubscribed' | 'bounced'
 export type SaleStatus = 'paid' | 'failed' | 'refunded'
 
-export interface User {
-  id: string
-  name: string
-  email: string
-  phone?: string
-  image?: string
-  address: string
-}
-
 export interface Mail {
   id: number
   unread?: boolean
@@ -52,27 +43,6 @@ export interface Notification {
   date: string
 }
 
-export interface Category {
-  id: number
-  name: string
-  description?: string
-  icon?: string
-}
-
-export type ServiceType = 'FREE' | 'FIXED' | 'CUSTOMIZE'
-export type ServiceArea = 'GENERAL' | 'PROPOSAL'
-
-export interface Service {
-  id: number
-  name: string
-  description?: string
-  icon?: string
-  price: number
-  type: ServiceType
-  area: ServiceArea
-  category: Category
-}
-
 export type Period = 'DAILY' | 'WEEKLY' | 'MONTHLY'
 
 export interface Range {
@@ -80,20 +50,52 @@ export interface Range {
   end: Date
 }
 
+export interface User {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  image?: string
+  address: string
+}
+
+export interface Category {
+  uuid: string
+  name: string
+  description?: string
+  icon?: string
+  type: CategoryType
+}
+
+export type ServiceArea = 'PLAN' | 'PROPOSAL'
+
+export interface Service {
+  uuid: string
+  name: string
+  description?: string
+  icon?: string
+  price: number
+  area: ServiceArea
+  category: Category
+}
+
 export type BillingCycle = 'DAY' | 'MONTH' | 'YEAR' | 'NONE'
 
+export type PlanType = 'FREE' | 'FIXED' | 'CUSTOMIZE'
+
 export interface Plan {
-  id: number
+  uuid: string
   name: string
   description?: string
   price: number
+  type: PlanType
   billingCycle: BillingCycle
 }
 
 export type ProposalRequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
 
 export interface ProposalRequest {
-  id: number
+  uuid: string
   plan: Plan
   phone: string
   email: string

@@ -77,8 +77,8 @@ const queryClient = useQueryClient()
 
 const { mutate, isPending: loading } = useMutation({
   mutationFn: (newService: Schema) => {
-    if (isEditing.value && props.service?.id) {
-      return $fetch(`/api/services/${props.service.id}`, { method: 'PATCH', body: newService })
+    if (isEditing.value && props.service?.uuid) {
+      return $fetch(`/api/services/${props.service.uuid}`, { method: 'PATCH', body: newService })
     }
     return $fetch('/api/services', { method: 'POST', body: newService })
   },
