@@ -12,12 +12,12 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-    (e: 'submit', ids: number[]): void
+    (e: 'submit', ids: string[]): void
 }>()
 
-const selectedIds = defineModel<number[]>('selectedIds', { default: () => [] })
+const selectedIds = defineModel<string[]>('selectedIds', { default: () => [] })
 
-const toggleSelection = (id: number) => {
+const toggleSelection = (id: string) => {
     const idx = selectedIds.value.indexOf(id)
     if (idx > -1) selectedIds.value.splice(idx, 1)
     else selectedIds.value.push(id)
@@ -35,9 +35,9 @@ const submit = () => {
     </div>
     <div v-else class="flex flex-col h-full">
         <div class="space-y-2 mb-4 max-h-[40vh] overflow-y-auto pr-1">
-            <div v-for="item in items" :key="item.id" @click="toggleSelection(item.id)"
-                :class="['flex items-center gap-3 p-3 border rounded-md cursor-pointer transition-colors', selectedIds.includes(item.id) ? (activeClass || 'border-primary/50 bg-primary/5') : (hoverClass || 'border-gray-200 dark:border-gray-800 hover:border-primary/30')]">
-                <UCheckbox :model-value="selectedIds.includes(item.id)" :color="submitColor || 'primary'"
+            <div v-for="item in items" :key="item.id" @click="toggleSelection(item.uuid)"
+                :class="['flex items-center gap-3 p-3 border rounded-md cursor-pointer transition-colors', selectedIds.includes(item.uuid) ? (activeClass || 'border-primary/50 bg-primary/5') : (hoverClass || 'border-gray-200 dark:border-gray-800 hover:border-primary/30')]">
+                <UCheckbox :model-value="selectedIds.includes(item.uuid)" :color="submitColor || 'primary'"
                     class="pointer-events-none" />
                 <div class="flex flex-col">
                     <span class="font-medium flex items-center gap-2">

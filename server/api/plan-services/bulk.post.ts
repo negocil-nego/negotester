@@ -3,10 +3,10 @@ import { z } from 'zod'
 
 const bodySchema = z.object({
   action: z.enum(['link', 'unlink']),
-  planId: z.number().optional(),
-  serviceId: z.number().optional(),
-  planIds: z.array(z.number()).optional(),
-  serviceIds: z.array(z.number()).optional()
+  planId: z.string().optional(),
+  serviceId: z.string().optional(),
+  planIds: z.array(z.string()).optional(),
+  serviceIds: z.array(z.string()).optional()
 }).refine((data) => {
   return (data.planId && data.serviceIds) || (data.serviceId && data.planIds)
 }, "Must provide either planId+serviceIds or serviceId+planIds")
@@ -16,11 +16,11 @@ export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema.parse)
 
   if (body.action === 'link') {
-    const rows: { plan_id: number, service_id: number }[] = []
+    const rows: { plan_uuid: string, service_uuid: string }[] = []
     if (body.planId && body.serviceIds) {
-      body.serviceIds.forEach(id => rows.push({ plan_id: body.planId!, service_id: id }))
+      body.serviceIds.forEach(id => rows.push({ plan_uuid: body.planId!, service_uuid: id }))
     } else if (body.serviceId && body.planIds) {
-      body.planIds.forEach(id => rows.push({ plan_id: id, service_id: body.serviceId! }))
+      body.planIds.forEach(id => rows.push({ plan_uuid: id, service_uuid: body.serviceId! }))
     }
 
     if (rows.length === 0) return { success: true }

@@ -15,7 +15,7 @@ const { data: plans, isPending: loadingPlans } = useQuery({
 
 const { data: attachedPlanIds, isPending: loadingAttached } = useQuery({
     queryKey: ['service-plans', computed(() => props.service?.uuid)],
-    queryFn: () => $fetch<number[]>(`/api/services/${props.service?.uuid}/plans`),
+    queryFn: () => $fetch<string[]>(`/api/services/${props.service?.uuid}/plans`),
     enabled: computed(() => !!props.service?.uuid)
 })
 
@@ -38,8 +38,8 @@ const items = [
     { key: 'has', label: 'Vinculados', icon: 'i-lucide-check-circle' }
 ]
 
-const selectedLinkedIds = ref<number[]>([])
-const selectedAvailableIds = ref<number[]>([])
+const selectedLinkedIds = ref<string[]>([])
+const selectedAvailableIds = ref<string[]>([])
 
 watch(open, (isOpen) => {
     if (isOpen) {

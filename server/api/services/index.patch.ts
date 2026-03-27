@@ -7,11 +7,11 @@ export default eventHandler(async (event) => {
     const { data, error } = await client.from('tb_services').update({
         name: body.name,
         icon: body.icon,
-        type: body.type,
+        area: body.area,
         price: body.price,
         description: body.description,
-        category_id: body.category.uuid,
-    } as never).eq('id', body.uuid)
+        category_uuid: body.category.uuid,
+    } as never).eq('uuid', body.uuid)
     if (error) throw createError({ statusMessage: error.message })
     return data
 })

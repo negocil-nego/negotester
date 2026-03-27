@@ -8,21 +8,23 @@ export default eventHandler(async (event) => {
   const { data: plans, error } = await client
     .from('tb_plans')
     .select(`
-      uuid,
-      name,
-      description,
-      price,
-      billing_cycle,
-      tb_plan_service (
-        id,
-        tb_services (
-          uuid,
-          name,
-          description,
-          icon
-        )
+    uuid,
+    name,
+    description,
+    price,
+    billing_cycle,
+    type,
+    tb_plan_service (
+      id,
+      tb_services!inner (
+        uuid,
+        name,
+        description,
+        icon
       )
-    `)
+    )
+  `)
+    .eq('tb_plan_service.tb_services.area', 'PLAN')
     .order('price', { ascending: true })
 
   if (error) {
@@ -31,11 +33,23 @@ export default eventHandler(async (event) => {
 
   const plansArray = plans as any[]
 
+  const labelPrice = (plan: any) => {
+    if (plan.price === 0) return 'Grátis'
+    if (plan.type == 'CUSTOMIZE') return '-'
+    return `${formatCurrency(plan.price, 'pt-AO', 'AOA')}`
+  }
+
+  const labelBillingCycle = (billing_cycle: any) => {
+    if (billing_cycle == 'MONTHLY') return 'Mês'
+    if (billing_cycle == 'YEARLY') return 'Ano'
+    return ''
+  }
+
   const formattedPlans = plansArray?.map(plan => ({
     title: plan.name,
     description: plan.description,
-    price: plan.price ? `${formatCurrency(plan.price, 'pt-AO', 'AOA')}` : 'Grátis',
-    billingCycle: plan.billing_cycle,
+    price: labelPrice(plan),
+    billingCycle: labelBillingCycle(plan.billing_cycle),
     type: plan.type,
     features: plan.tb_plan_service?.map((ps: any) => ps.tb_services?.name).filter(Boolean) || [],
     button: {

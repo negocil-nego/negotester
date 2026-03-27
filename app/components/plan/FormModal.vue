@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
-import type { BillingCycle, Plan } from '~/types'
+import type { BillingCycle, Plan, PlanType } from '~/types'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import * as z from 'zod'
 
@@ -10,7 +10,8 @@ const schema = z.object({
   name: z.string().min(2, 'Nome é obrigatório'),
   price: z.number().min(0, 'O preço não pode ser negativo'),
   description: z.string().min(5, 'Adicione uma descrição detalhada'),
-  billingCycle: z.enum(['DAY', 'MONTH', 'YEAR', 'NONE'] as BillingCycle[])
+  billingCycle: z.enum(['DAY', 'MONTH', 'YEAR', 'NONE'] as BillingCycle[]),
+  type: z.enum(['FIXED', 'CUSTOMIZE', 'FREE'] as PlanType[])
 })
 
 type Schema = z.output<typeof schema>
@@ -30,7 +31,8 @@ const state = reactive({
   name: '',
   price: 0,
   description: '',
-  billingCycle: 'NONE' as BillingCycle
+  billingCycle: 'NONE' as BillingCycle,
+  type: 'FIXED' as PlanType
 })
 
 watch(open, (isOpen) => {
@@ -43,6 +45,7 @@ watch(open, (isOpen) => {
       isEditingInternal.value = true
       Object.assign(state, {
         name: props.plan.name,
+        type: props.plan.type,
         price: props.plan.price,
         description: props.plan.description,
         billingCycle: props.plan.billingCycle
@@ -65,9 +68,16 @@ const queryClient = useQueryClient()
 const { mutate, isPending: loading } = useMutation({
   mutationFn: (newPlan: Schema) => {
     if (isEditing.value && props.plan?.uuid) {
-      return $fetch(`/api/plans/${props.plan.uuid}`, { method: 'PATCH', body: newPlan })
+      return $fetch(`/api/plans/${props.plan.uuid}`, {
+        method: 'PATCH',
+        body: newPlan
+      })
+    } else {
+      return $fetch('/api/plans', {
+        method: 'POST',
+        body: newPlan
+      })
     }
-    return $fetch('/api/plans', { method: 'POST', body: newPlan })
   },
   onSuccess: (_, variables) => {
     queryClient.invalidateQueries({ queryKey: ['plans'] })
@@ -111,6 +121,10 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
               <CoreSelectBillingCycle v-model="state.billingCycle" />
             </UFormField>
           </div>
+
+          <UFormField label="Tipo de Plano" name="type" required>
+            <CoreSelectPlanType v-model="state.type" />
+          </UFormField>
 
           <UFormField label="Descrição do Plano" name="description" required>
             <UTextarea v-model="state.description" :rows="4" placeholder="O que este plano inclui?" class="w-full" />

@@ -7,7 +7,7 @@ export default eventHandler(async (event) => {
     const { error } = await client
         .from('tb_plan_service')
         .delete()
-        .match({ plan_id: planId, service_id: serviceId })
+        .match({ plan_uuid: planId, service_uuid: serviceId })
 
     if (error) throw createError({ statusMessage: error.message })
     return { success: true }

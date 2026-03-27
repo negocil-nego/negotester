@@ -2,11 +2,12 @@
     <div class="flex flex-col lg:flex-row-reverse items-center justify-center max-w-6xl mx-auto lg:gap-10">
         <div class="flex items-center justify-center flex-col">
             <div
-                class="font-display text-center md:text-left text-3xl md:text-5xl font-bold leading-tight tracking-tight mb-6">
+                class="font-display text-center md:text-left text-3xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight mb-6">
                 <span>Qualidade sob o</span>
                 <span class="text-primary left-1"> olhar humano</span>
             </div>
-            <p class="px-5 md:px-0 text-hero-muted text-md md:text-lg max-w-xl mb-6 leading-relaxed text-center">
+            <p
+                class="px-5 md:px-0 text-hero-muted text-md md:text-lg lg:text-2xl max-w-xl mb-6 leading-relaxed text-center">
                 Sua equipe de especialistas para testes manuais e exploratórios. Validamos cada clique, formulário e
                 fluxo do seu projeto para garantir a melhor experiência para seus usuários.
             </p>

@@ -6,13 +6,12 @@
 <script setup lang="ts">
 import type { SelectMenuItem } from '@nuxt/ui'
 import type { BillingCycle } from '~/types';
+import { billingCycleMap } from '~/types/select';
 
 const modelValue = defineModel<BillingCycle>()
 
-const options: SelectMenuItem[] = [
-    { label: 'Nenhum', value: 'NONE' },
-    { label: 'Diário', value: 'DAY' },
-    { label: 'Mensal', value: 'MONTH' },
-    { label: 'Anual', value: 'YEAR' }
-]
+const options: SelectMenuItem[] = Object.entries(billingCycleMap).map(([value, label]) => ({
+    label,
+    value: value as BillingCycle
+}));
 </script>

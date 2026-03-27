@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getPaginationRowModel } from '@tanstack/table-core'
+import { billingCycleMap, planTypeMap } from '~/types/select'
 import { useQuery } from '@tanstack/vue-query'
 import type { TableColumn } from '@nuxt/ui'
 import type { Plan } from '~/types'
@@ -54,18 +55,32 @@ const columns: TableColumn<Plan>[] = [
     header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Preço'))
   },
   {
+    accessorKey: 'type',
+    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Tipo de Plano')),
+    cell: ({ row }) => {
+      const type = row.original.type;
+      const color = {
+        FIXED: 'warning' as const,
+        FREE: 'success' as const,
+        CUSTOMIZE: 'error' as const,
+      }[type];
+      return h(UBadge, { variant: 'subtle', color }, () => planTypeMap[type] || type);
+    }
+  },
+  {
     accessorKey: 'billingCycle',
     header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Ciclo de Faturação')),
     cell: ({ row }) => {
+      const billingCycle = row.original.billingCycle;
       const color = {
         DAY: 'success' as const,
         MONTH: 'error' as const,
         YEAR: 'warning' as const,
         NONE: 'neutral' as const
-      }[row.original.billingCycle]
+      }[billingCycle]
 
       return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () =>
-        row.original.billingCycle
+        billingCycleMap[billingCycle] || billingCycle
       )
     }
   },

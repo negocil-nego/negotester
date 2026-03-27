@@ -9,9 +9,9 @@ export default eventHandler(async (event) => {
     const { data, error } = await client
         .from('tb_plan_service')
         .insert({
-            service_id: serviceId,
-            plan_id: body.plan_id
-        })
+            service_uuid: serviceId,
+            plan_uuid: body.plan_id
+        } as any)
         .select()
         .single()
 

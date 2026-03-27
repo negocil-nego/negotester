@@ -6,11 +6,12 @@
 <script setup lang="ts">
 import type { SelectMenuItem } from '@nuxt/ui'
 import type { ServiceArea } from '~/types';
+import { serviceAreaOptions } from '~/types/select';
 
 const modelValue = defineModel<ServiceArea>()
 
-const options: SelectMenuItem[] = [
-    { label: 'Geral', value: 'GENERAL' },
-    { label: 'Proposta', value: 'PROPOSAL' },
-]
+const options: SelectMenuItem[] = Object.entries(serviceAreaOptions).map(([value, label]) => ({
+    label,
+    value: value as ServiceArea
+}));
 </script>

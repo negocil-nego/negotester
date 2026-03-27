@@ -9,10 +9,10 @@ export default eventHandler(async (event) => {
         .insert({
             name: body.name,
             icon: body.icon,
-            type: body.type,
+            area: body.area,
             price: body.price,
             description: body.description,
-            category_id: body.category.id,
+            category_uuid: body.category.uuid
         } as any)
         .select("*, tb_categories(*)")
         .single();

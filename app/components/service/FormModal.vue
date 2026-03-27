@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/vue-query'
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
-import type { Service, Category, ServiceType, ServiceArea } from '~/types'
+import type { Service, Category, ServiceArea } from '~/types'
 
 const props = defineProps<{
   service?: Service
@@ -24,9 +24,8 @@ const schema = z.object({
   price: z.number().min(0, 'O preço não pode ser negativo'),
   description: z.string().min(2, 'Descrição muito curta'),
   icon: z.string().min(2, 'Icone muito curto').optional(),
-  category: z.any().refine(val => val && val.id, 'Categoria é obrigatória'),
-  type: z.enum(['FREE', 'FIXED', 'CUSTOMIZE'] as ServiceType[]),
-  area: z.enum(['GENERAL', 'PROPOSAL'] as ServiceArea[])
+  category: z.any().refine(val => val && val.uuid, 'Categoria é obrigatória'),
+  area: z.enum(['PLAN', 'PROPOSAL'] as ServiceArea[])
 })
 
 type Schema = z.output<typeof schema>
@@ -53,6 +52,7 @@ watch(open, (isOpen) => {
         description: props.service.description,
         icon: props.service.icon,
         category: props.service.category,
+        area: props.service.area,
         image: undefined
       })
     } else {
@@ -133,15 +133,9 @@ const onCancel = () => {
             </UFormField>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <UFormField label="Tipo de Serviço" name="type" required>
-              <CoreSelectServiceType v-model="state.type" />
-            </UFormField>
-
-            <UFormField label="Área de Atuação" name="area" required>
-              <CoreSelectServiceArea v-model="state.area" />
-            </UFormField>
-          </div>
+          <UFormField label="Área de Atuação" name="area" required>
+            <CoreSelectServiceArea v-model="state.area" />
+          </UFormField>
 
           <UFormField label="Descrição" name="description" required>
             <UTextarea v-model="state.description" :rows="3" placeholder="Descrição do serviço" class="w-full" />

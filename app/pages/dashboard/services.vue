@@ -3,11 +3,13 @@ import { getPaginationRowModel } from '@tanstack/table-core'
 import { useQuery } from '@tanstack/vue-query'
 import type { TableColumn } from '@nuxt/ui'
 import type { Service } from '~/types'
+import { serviceAreaOptions } from '~/types/select'
 
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UCheckbox = resolveComponent('UCheckbox')
 const UTooltip = resolveComponent('UTooltip')
 const UButton = resolveComponent('UButton')
+const UBadge = resolveComponent('UBadge')
 const Icon = resolveComponent('Icon')
 const table = useTemplateRef('table')
 
@@ -50,9 +52,28 @@ const columns: TableColumn<Service>[] = [
     header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Nome'))
   },
   {
+    accessorKey: 'category',
+    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Categoria')),
+    cell: ({ row }) => h(UTooltip, { text: row.original.category?.name }, () => h(UButton, { variant: 'ghost', color: 'neutral', class: 'font-normal' }, row.original.category?.name))
+  },
+  {
     accessorKey: 'icon',
     header: 'Icone',
     cell: ({ row }) => h(Icon, { name: row.original.icon, class: 'w-5 h-5' })
+  },
+  {
+    accessorKey: 'area',
+    header: ({ column }) => h(UButton, columnHeaderSort(column, column.getIsSorted(), 'Área')),
+    cell: ({ row }) => {
+      const area = row.original.area;
+      const color = {
+        PLAN: 'success' as const,
+        PROPOSAL: 'warning' as const,
+      }[area]
+      return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () =>
+        serviceAreaOptions[area] || area
+      )
+    }
   },
   {
     accessorKey: 'description',

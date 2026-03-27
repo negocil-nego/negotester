@@ -4,7 +4,7 @@ export function toMapCategory(row: any): Category {
     if (!row) return {} as Category;
 
     return {
-        uuid: row.id ?? 0,
+        uuid: row.uuid ?? 0,
         name: row.name ?? '',
         icon: row.icon ?? '',
         description: row.description ?? '',
@@ -13,12 +13,11 @@ export function toMapCategory(row: any): Category {
 
 export function toMapService(row: any): Service {
     return {
-        uuid: row.id ?? 0,
+        uuid: row.uuid ?? 0,
         name: row.name ?? '',
         icon: row.icon ?? '',
         price: row.price ?? 0,
-        type: row.type ?? 'FREE',
-        area: row.area ?? 'GENERAL',
+        area: row.area ?? 'PLAN',
         description: row.description ?? '',
         category: toMapCategory(row.tb_categories)
     };

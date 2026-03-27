@@ -8,9 +8,9 @@ export default eventHandler(async (event) => {
 
     const { data, error } = await client
         .from('tb_plan_service')
-        .select('service_id')
-        .eq('plan_id', planId)
+        .select('service_uuid')
+        .eq('plan_uuid', planId)
 
     if (error) throw createError({ statusMessage: error.message })
-    return data.map((row: any) => row.service_id)
+    return data.map((row: any) => row.service_uuid)
 })

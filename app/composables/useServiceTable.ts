@@ -26,7 +26,7 @@ export function useServiceTable(table: any, onEdit: (service: Service, sectionTy
     })
 
     const deleteMutation = useMutation({
-        mutationFn: (serviceId: number) => $fetch(`/api/services/${serviceId}`, { method: 'DELETE' }),
+        mutationFn: (serviceId: string) => $fetch(`/api/services/${serviceId}`, { method: 'DELETE' }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['services'] })
             toast.add({

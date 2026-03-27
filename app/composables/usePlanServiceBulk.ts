@@ -2,10 +2,10 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 export type BulkActionPayload = {
     action: 'link' | 'unlink'
-    planId?: number
-    serviceId?: number
-    planIds?: number[]
-    serviceIds?: number[]
+    planId?: string
+    serviceId?: string
+    planIds?: string[]
+    serviceIds?: string[]
 }
 
 export function usePlanServiceBulk() {
