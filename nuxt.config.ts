@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/image',
     '@nuxtjs/supabase',
-    '@nuxtjs/device'
+    '@nuxtjs/device',
+    '@pinia/nuxt'
   ],
 
   devtools: {

@@ -1,9 +1,8 @@
 import { serverSupabaseClient } from '#supabase/server'
-import { useCurrencyFormatter } from '~/composables/useCurrencyFormatter'
+import type { PlanServiceResponse } from '~/types/response'
 
 export default eventHandler(async (event) => {
   const client = await serverSupabaseClient(event)
-  const { formatCurrency } = useCurrencyFormatter()
 
   const { data: plans, error } = await client
     .from('tb_plans')
@@ -13,13 +12,15 @@ export default eventHandler(async (event) => {
       description,
       price,
       billing_cycle,
+      type,
       tb_plan_service (
         id,
         tb_services (
           uuid,
           name,
           description,
-          icon
+          icon,
+          area
         )
       )
     `)
@@ -29,21 +30,23 @@ export default eventHandler(async (event) => {
     throw createError({ statusCode: 500, statusMessage: error.message })
   }
 
-  const plansArray = plans as any[]
-
-  const formattedPlans = plansArray?.map(plan => ({
-    title: plan.name,
-    description: plan.description,
-    price: plan.price ? `${formatCurrency(plan.price, 'pt-AO', 'AOA')}` : 'Grátis',
-    billingCycle: plan.billing_cycle,
-    type: plan.type,
-    features: plan.tb_plan_service?.map((ps: any) => ps.tb_services?.name).filter(Boolean) || [],
-    button: {
-      label: 'Assinar agora',
-      class: 'rounded-full p-3 md:p-5',
-      variant: 'outline'
+  return plans.map((it: any) => {
+    return {
+      uuid: it.uuid,
+      name: it.name,
+      description: it.description,
+      price: it.price,
+      billingCycle: it.billing_cycle,
+      type: it.type,
+      services: it.tb_plan_service.map((ps: any) => {
+        return {
+          uuid: ps.tb_services.uuid,
+          name: ps.tb_services.name,
+          description: ps.tb_services.description,
+          icon: ps.tb_services.icon,
+          area: ps.tb_services.area
+        }
+      })
     }
-  })) || []
-
-  return formattedPlans
+  }) as PlanServiceResponse[]
 })

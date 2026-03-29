@@ -27,25 +27,13 @@ const items = ref<StepperItem[]>([
   }
 ])
 
-const form = reactive({
-  plan: 'basico',
-  scope: [] as string[],
-  userInfo: {
-    fullName: '',
-    email: '',
-    phone: '',
-    organization: ''
-  },
-  assets: {
-    systemUrl: ''
-  }
-})
+const proposalStore = useProposalStore()
 
 const nextStep = () => {
   if (activeStep.value < items.value.length - 1) {
     activeStep.value++
   } else {
-    console.log('Form submitted:', form)
+    console.log('Form submitted:', proposalStore.$state)
     open.value = false
   }
 }
@@ -80,10 +68,10 @@ const prevStep = () => {
             <div class="mx-auto w-full h-full flex flex-col">
               <transition name="fade" mode="out-in">
                 <div :key="activeStep" class="flex-1">
-                  <HomepageProposalStepPlan v-if="activeStep === 0" v-model="form.plan" />
-                  <HomepageProposalStepScope v-if="activeStep === 1" v-model="form.scope" />
-                  <HomepageProposalStepUser v-if="activeStep === 2" v-model="form.userInfo" />
-                  <HomepageProposalStepAssets v-if="activeStep === 3" v-model="form.assets" />
+                  <HomepageProposalStepPlan v-if="activeStep === 0" v-model="proposalStore.plan" />
+                  <HomepageProposalStepScope v-if="activeStep === 1" v-model="proposalStore.scope" />
+                  <HomepageProposalStepUser v-if="activeStep === 2" v-model="proposalStore.userInfo" />
+                  <HomepageProposalStepAssets v-if="activeStep === 3" v-model="proposalStore.assets" />
                 </div>
               </transition>
             </div>
@@ -98,7 +86,7 @@ const prevStep = () => {
 
             <div class="flex items-center gap-6">
               <span v-if="activeStep === 1" class="text-[10px] font-bold tracking-widest text-white/40 uppercase">
-                {{ form.scope.length }} items SELECTED
+                {{ proposalStore.scope.length }} items SELECTED
               </span>
               <UButton trailing-icon="i-lucide-chevron-right"
                 class="bg-[#00FF88] hover:bg-[#00DDAA] text-black font-bold px-8 py-4 rounded-full shadow-[0_4px_20px_rgba(0,255,136,0.3)] transition-all active:scale-95"

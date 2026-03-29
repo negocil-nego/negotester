@@ -1,13 +1,54 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PricingPlanProps } from '@nuxt/ui'
+import { useCurrencyFormatter } from '~/composables/useCurrencyFormatter'
+import { useProposalStore } from '~/stores/useProposalStore'
+import type { PlanServiceResponse } from '~/types/response';
 
 defineProps<{
-    modelValue?: string
+    modelValue?: any
 }>()
 
 const emit = defineEmits(['update:modelValue'])
 
-const { data: plans, pending, error } = await useFetch<PricingPlanProps[]>('/api/plan-services')
+const proposalStore = useProposalStore()
+const { formatCurrency } = useCurrencyFormatter()
+
+const { data: rawPlans, pending, error } = await useFetch<PlanServiceResponse[]>('/api/plan-services')
+
+const plans = computed<PricingPlanProps[]>(() => {
+    if (!rawPlans.value) return []
+
+    return rawPlans.value.map((plan) => {
+        const isSelected = proposalStore.plan?.uuid === plan.uuid
+        return {
+            title: plan.name,
+            description: plan.description,
+            price: plan.price ? `${formatCurrency(plan.price, 'pt-AO', 'AOA')}` : 'Grátis',
+            billingCycle: plan.billingCycle,
+            type: plan.type,
+            value: plan.uuid,
+            features: plan.services?.map((ps: any) => ps.name).filter(Boolean) || [],
+            highlight: isSelected,
+            button: {
+                label: isSelected ? 'Selecionado' : 'Assinar agora',
+                class: 'rounded-full p-3 md:p-5',
+                variant: isSelected ? 'solid' : 'outline',
+                onClick: () => onPlanSelected(plan)
+            }
+        }
+    })
+})
+
+const onPlanSelected = (selected: PlanServiceResponse) => {
+    emit('update:modelValue', selected)
+    const rawPlan = rawPlans.value?.find(p => p.uuid === selected.uuid || p.name === selected.name)
+    if (rawPlan) {
+        proposalStore.plan = rawPlan
+    } else {
+        proposalStore.plan = selected
+    }
+}
 </script>
 
 <template>
@@ -34,7 +75,6 @@ const { data: plans, pending, error } = await useFetch<PricingPlanProps[]>('/api
             <p>Nenhum plano encontrado.</p>
         </div>
 
-        <UPricingPlans v-else :plans="plans" :model-value="modelValue"
-            @update:model-value="emit('update:modelValue', $event)" />
+        <UPricingPlans v-else :plans="plans" :model-value="modelValue" @update:model-value="onPlanSelected" />
     </div>
 </template>
