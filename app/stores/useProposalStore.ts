@@ -7,6 +7,7 @@ interface UserInfo {
   email: string
   phone: string
   organization: string
+  description: string
 }
 
 interface AssetsInfo {
@@ -21,7 +22,8 @@ export const useProposalStore = defineStore('proposal', {
       fullName: '',
       email: '',
       phone: '',
-      organization: ''
+      organization: '',
+      description: ''
     } as UserInfo,
     assets: {
       systemUrl: ''

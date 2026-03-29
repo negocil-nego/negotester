@@ -61,7 +61,7 @@ const prevStep = () => {
       <template #body>
         <div class="flex flex-col h-full bg-[#0A0A0A]">
           <div class="py-6 px-4 md:px-20 border-b border-white/5 bg-[#0D0D0D]">
-            <UStepper :items="items" class="w-full" />
+            <UStepper :items="items" v-model="activeStep" class="w-full" />
           </div>
 
           <div class="flex-1 overflow-y-auto p-6 md:p-10 scrollbar-hide">

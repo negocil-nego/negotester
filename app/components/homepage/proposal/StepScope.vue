@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/vue-query';
 import type { Service } from '~/types';
 
 const props = defineProps<{
-  modelValue: string[]
+  modelValue: Service[]
 }>()
 
 const emit = defineEmits(['update:modelValue'])
@@ -27,11 +27,11 @@ const filteredData = computed(() => {
   )
 })
 
-const toggleScope = (id: string) => {
+const toggleScope = (service: Service) => {
   const newScope = [...props.modelValue]
-  const index = newScope.indexOf(id)
+  const index = newScope.findIndex(s => s.uuid === service.uuid)
   if (index === -1) {
-    newScope.push(id)
+    newScope.push(service)
   } else {
     newScope.splice(index, 1)
   }
@@ -73,9 +73,9 @@ const toggleScope = (id: string) => {
       <div v-if="filteredData.length === 0" class="col-span-1 md:col-span-2 text-center text-white/40 py-8">
         Nenhum serviço encontrado para "{{ searchQuery }}"
       </div>
-      <div v-for="option in filteredData" :key="option.uuid" @click="toggleScope(option.uuid)"
+      <div v-for="option in filteredData" :key="option.uuid" @click="toggleScope(option)"
         class="p-8 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col gap-6" :class="[
-          modelValue.includes(option.uuid)
+          modelValue.some(s => s.uuid === option.uuid)
             ? 'bg-[#121212] border-[#00FF88] shadow-[0_0_20px_rgba(0,255,136,0.1)] scale-[1.01]'
             : 'bg-[#111111] border-white/5 hover:border-white/20'
         ]">
@@ -84,8 +84,8 @@ const toggleScope = (id: string) => {
             <UIcon :name="option.icon || 'i-lucide-check-circle'" class="w-8 h-8" />
           </div>
           <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors"
-            :class="modelValue.includes(option.uuid) ? 'bg-[#00FF88] border-[#00FF88]' : 'border-white/20'">
-            <UIcon v-if="modelValue.includes(option.uuid)" name="i-lucide-check" class="w-4 h-4 text-black" />
+            :class="modelValue.some(s => s.uuid === option.uuid) ? 'bg-[#00FF88] border-[#00FF88]' : 'border-white/20'">
+            <UIcon v-if="modelValue.some(s => s.uuid === option.uuid)" name="i-lucide-check" class="w-4 h-4 text-black" />
           </div>
         </div>
         <div class="flex flex-col gap-2">

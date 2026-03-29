@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { PlanServiceResponse } from '~/types/response'
+
 defineProps<{
-  modelValue: string
+  modelValue: PlanServiceResponse
 }>()
 
 const emit = defineEmits(['update:modelValue'])
